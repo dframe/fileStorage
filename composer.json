@@ -3,7 +3,6 @@
     "description": "File system storage with cache",
     "type": "library",
     "require": {
-        "dframe/dframe": "^3.24",
         "coldume/imagecraft": "^1.0",
         "league/flysystem": "^1.0"
     },
