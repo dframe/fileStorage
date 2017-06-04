@@ -1,5 +1,6 @@
 <?php
 namespace Libs\Plugins\stylist;
+use Imagecraft\ImageBuilder;
 
 /*
  * Abstrakcyjna klasa prostokatnego stylisty
@@ -9,10 +10,33 @@ namespace Libs\Plugins\stylist;
  */
 
 class rectStylist extends \Dframe\fileStorage\stylist {
-	
-	public function stylize($layer, $stylistParam){
-		$layer->resize($stylistParam['w'], $stylistParam['h'], 'fill_crop');
-	}
+
+
+    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
+
+        $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
+        $builder = new ImageBuilder($options);
+
+        $layer = $builder->addBackgroundLayer();
+        $contents = stream_get_contents($originStream);
+        $layer->contents($contents);
+        $layer->resize($stylistParam['w'], $stylistParam['h'], 'fill_crop');
+        
+        fclose($originStream);
+        
+        $image = $builder->save();
+        
+        $tmpFile = tmpfile();
+        if ($image->isValid()) {
+            fwrite($tmpFile, $image->getContents());
+        } else {
+            throw new \Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
+        }
+
+        rewind($tmpFile);
+        return $tmpFile;
+
+    }
 
 	public function identify($stylistParam){
 

@@ -4,7 +4,6 @@ use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
-use Imagecraft\ImageBuilder;
 
 #UserFile
 class image {
@@ -62,9 +61,9 @@ class image {
                 $mimetype = $this->manager->getMimetype($sourceAdapter);
                 if(!empty($output)){
 
-                    $stylistObj = $this->getStylist($output['stylist'].'Stylist');
+                    $getStylist = $this->getStylist($output['stylist'].'Stylist');
                     $readStream = $this->manager->readStream($sourceAdapter);
-                    $putStream = $this->stylize($readStream, null, $stylistObj, $output);
+                    $putStream = $getStylist->stylize($readStream, null, $getStylist, $output);
 
                 }else{
                     // Retrieve a read-stream
@@ -125,9 +124,9 @@ class image {
               $mimetype = $this->manager->getMimetype($sourceAdapter);
 
                 if(!empty($output)){
-                    $stylistObj = $this->getStylist($output['stylist'].'Stylist');
+                    $getStylist = $this->getStylist($output['stylist'].'Stylist');
                     $readStream = $this->manager->readStream($sourceAdapter);
-                    $putStream = $this->stylize($readStream, null, $stylistObj, $output);
+                    $putStream = $getStylist->stylize($readStream, null, $getStylist, $output);
 
                 }else{
                     // Retrieve a read-stream
@@ -196,40 +195,6 @@ class image {
 
     }
 
-    /**
-     * Zasadniczy mechanizm stylizowania obrazu
-     * Tylko do uzytku wewnatrz klasy!!!
-     * @param resource $originStream
-     * @param string $extension
-     * @param Dframe/Libs/Stylist $stylist
-     * @param array $stylistParam
-     * @return resource
-     */
-    protected function stylize($originStream, $extension, $stylistObj, $stylistParam){
-
-        $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
-        $builder = new ImageBuilder($options);
-
-        $layer = $builder->addBackgroundLayer();
-        $contents = stream_get_contents($originStream);
-        $layer->contents($contents);
-        
-        fclose($originStream);
-
-        $stylistObj->stylize($layer, $stylistParam);
-        $image = $builder->save();
-        
-        $tmpFile = tmpfile();
-        if ($image->isValid()) {
-            fwrite($tmpFile, $image->getContents());
-        } else {
-            throw new \Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
-        }
-
-        rewind($tmpFile);
-        return $tmpFile;
-    }
-
 
     /**
      * Zwraca obiekt stylisty o wskazanej nazwie
@@ -246,7 +211,7 @@ class image {
             require_once appDir.'/simpleStylist.php';
             $className = '\\Dframe\\fileStorage\\stylist\\simpleStylist';
             if(!class_exists($className) OR !method_exists($className, 'stylize')){
-                throw new \Exception('Requested stylist was not found or is incorrect');
+                throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
                 return NULL;
             }
     
@@ -256,7 +221,7 @@ class image {
         require_once appDir.'../app/Libs/Plugins/Stylist/'.$stylist.'.php';
         $className = '\\Libs\\Plugins\\Stylist\\'.$stylist;
         if(!class_exists($className) OR !method_exists($className, 'stylize')){
-            throw new \Exception('Requested stylist was not found or is incorrect');
+            throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
             return NULL;
         }
 

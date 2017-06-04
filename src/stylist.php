@@ -22,7 +22,7 @@ abstract class stylist {
 	 * @param array
 	 * @return layer
 	 */
-	abstract public function stylize($layer, $stylistParam);
+	abstract public function stylize($originStream, $extension, $stylistObj, $stylistParam);
 	
 	/**
 	 * Zwraca unikalna nazwe stylisty, takze w zaleznosci od parametrow
