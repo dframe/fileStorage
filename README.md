@@ -13,53 +13,62 @@ You can create own driver in example usage is mysql driver.
 POST from
 ```php 
 <?php
-include 'app/Model/fileStorage/drivers/databaseDriverStalone.php';
+namespace Controller;
+/*
+ * Dframe Route: myFileSystem/index | index.php?task=myFileSystem&action=index
+ * 
+ */
 
-$fileStorage = new \Dframe\fileStorage\Storage(new databaseDriverStalone());
-$method = $_SERVER['REQUEST_METHOD'];
+class myFileSystem extends \Dframe\Controller 
+{
 
-switch ($method) {
-    case 'POST':
-        //Aktualizacja avatara
-        $imagename = $_FILES['file']['name'];
-        $size = $_FILES['file']['size'];
-    
-        $extension = strtolower(pathinfo($imagename, PATHINFO_EXTENSION)); //Walidacja Rozszerzenia
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $_FILES['file']['tmp_name']);  //Walidacja Mine
-        finfo_close($finfo);
-        if(!in_array($mime, array('image/jpeg', 'image/png', 'image/gif')) OR !in_array($extension, array('jpeg', 'jpg', 'png', 'gif')));
-            exit('Wrong extension');
-    
-        $put = $fileStorage->put('local', $_FILES['file']['tmp_name'], 'images/path/name.'.$extension);
-        if($put['return'] == true)
-            exit(json_encode(array('return' => '1', 'response' => 'File Upload OK')));
+    public function index(){
+        $fileStorage = new \Dframe\fileStorage\Storage($this->loadModel('fileStorage/drivers/databaseDriver'));
+        $method = $_SERVER['REQUEST_METHOD'];
 
-        exit(json_encode(array('return' => '0', 'response' => 'Error')));
-
-        break;
-
-    case 'DELETE':
-
-        $drop = $fileStorage->drop('local', 'images/path/name.jpg'); // Filename+Extension
-        if($drop['return'] == true)
-            exit(json_encode(array('return' => '1', 'response' => 'File Deleted')));
+        switch ($method) {
+            case 'POST':
+                //Aktualizacja avatara
+                $imagename = $_FILES['file']['name'];
+                $size = $_FILES['file']['size'];
+            
+                $extension = strtolower(pathinfo($imagename, PATHINFO_EXTENSION)); //Walidacja Rozszerzenia
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime = finfo_file($finfo, $_FILES['file']['tmp_name']);  //Walidacja Mine
+                finfo_close($finfo);
+                if(!in_array($mime, array('image/jpeg', 'image/png', 'image/gif')) OR !in_array($extension,     array    ('jpeg', 'jpg', 'png', 'gif')));
+                    exit('Wrong extension');
+            
+                $put = $fileStorage->put('local', $_FILES['file']['tmp_name'], 'images/path/name.'.$extension);
+                if($put['return'] == true)
+                    exit(json_encode(array('return' => '1', 'response' => 'File Upload OK')));
         
-        exit(json_encode(array('return' => '0', 'response' => $drop['response'])));
-
-        break;
-    
-    default:
-
-        echo 'Upload Form <br>
-            <br>
-            <form action="" method="POST" enctype="multipart/form-data">
-                Select image to upload:
-                <input type="file" name="name" id="name">
-                <input type="submit" value="Upload Image" name="submit">
-            </form>';
-
-        break;
+                exit(json_encode(array('return' => '0', 'response' => 'Error')));
+        
+                break;
+        
+            case 'DELETE':
+        
+                $drop = $fileStorage->drop('local', 'images/path/name.jpg'); // Filename+Extension
+                if($drop['return'] == true)
+                    exit(json_encode(array('return' => '1', 'response' => 'File Deleted')));
+                
+                exit(json_encode(array('return' => '0', 'response' => $drop['response'])));
+        
+                break;
+            
+            default:
+        
+                echo 'Upload Form <br>
+                    <br>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        Select image to upload:
+                        <input type="file" name="name" id="name">
+                        <input type="submit" value="Upload Image" name="submit">
+                    </form>';
+        
+                break;
+        }
 }
 
 ```
