@@ -1,6 +1,6 @@
 <?php
 namespace Model\fileStorage\drivers;
-use \Dframe\fileStorage\drivers\databaseDriver;
+use Dframe\fileStorage\drivers\databaseDriver;
 
 class databaseDriverModel extends \Model\Model implements databaseDriver 
 {

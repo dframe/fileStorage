@@ -27,8 +27,8 @@ return array(
         '_params' => '[value]'
         ),
     
-    'filestorage/data' => array(
-        'filestorage/data/[params]',
+    'filestorage/file' => array(
+        'filestorage/file/[params]',
         'task=page&action=file',
         'params' => '(.*)',
         '_params' => array(
