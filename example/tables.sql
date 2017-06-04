@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Czas generowania: 04 Cze 2017, 10:58
+-- Czas generowania: 04 Cze 2017, 15:50
 -- Wersja serwera: 5.7.16
 -- Wersja PHP: 7.0.13-1~dotdeb+8.1
 
@@ -16,6 +16,9 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Baza danych: `files`
+--
 
 -- --------------------------------------------------------
 
@@ -43,7 +46,7 @@ CREATE TABLE `files_cache` (
   `file_cache_path` varchar(255) NOT NULL,
   `file_cache_mime` varchar(127) NOT NULL,
   `last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 
 --
 -- Indeksy dla zrzutów tabel
@@ -73,22 +76,12 @@ ALTER TABLE `files_cache`
 -- AUTO_INCREMENT dla tabeli `files`
 --
 ALTER TABLE `files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT dla tabeli `files_cache`
 --
 ALTER TABLE `files_cache`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
---
--- Ograniczenia dla zrzutów tabel
---
-
---
--- Ograniczenia dla tabeli `files_cache`
---
-ALTER TABLE `files_cache`
-  ADD CONSTRAINT `files_cache_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
