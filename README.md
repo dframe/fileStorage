@@ -13,7 +13,7 @@ You can create own driver in example usage is mysql driver.
 POST from
 ```php 
 <?php
-include 'fileStorage/drivers/databaseDriverStalone.php';
+include 'app/Model/fileStorage/drivers/databaseDriverStalone.php';
 
 $fileStorage = new \Dframe\fileStorage\Storage(new databaseDriverStalone());
 $method = $_SERVER['REQUEST_METHOD'];
