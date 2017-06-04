@@ -21,11 +21,13 @@ namespace Controller;
 
 class myFileSystem extends \Dframe\Controller 
 {
+    public function init(){
+        $this->fileStorage = new \Dframe\fileStorage\Storage($this->loadModel('fileStorage/drivers/databaseDriver'));
+    }
 
     public function index(){
-        $fileStorage = new \Dframe\fileStorage\Storage($this->loadModel('fileStorage/drivers/databaseDriver'));
+   
         $method = $_SERVER['REQUEST_METHOD'];
-
         switch ($method) {
             case 'POST':
                 //Aktualizacja avatara
@@ -39,7 +41,7 @@ class myFileSystem extends \Dframe\Controller
                 if(!in_array($mime, array('image/jpeg', 'image/png', 'image/gif')) OR !in_array($extension,     array    ('jpeg', 'jpg', 'png', 'gif')));
                     exit('Wrong extension');
             
-                $put = $fileStorage->put('local', $_FILES['file']['tmp_name'], 'images/path/name.'.$extension);
+                $put = $this->fileStorage->put('local', $_FILES['file']['tmp_name'], 'images/path/name.'.$extension);
                 if($put['return'] == true)
                     exit(json_encode(array('return' => '1', 'response' => 'File Upload OK')));
         
@@ -49,7 +51,7 @@ class myFileSystem extends \Dframe\Controller
         
             case 'DELETE':
         
-                $drop = $fileStorage->drop('local', 'images/path/name.jpg'); // Filename+Extension
+                $drop = $this->fileStorage->drop('local', 'images/path/name.jpg'); // Filename+Extension
                 if($drop['return'] == true)
                     exit(json_encode(array('return' => '1', 'response' => 'File Deleted')));
                 
@@ -68,6 +70,17 @@ class myFileSystem extends \Dframe\Controller
                     </form>';
         
                 break;
+        }
+        
+        public function image(){
+            echo $this->fileStorage->image('images/path/name.jpg')->stylist('square')->size('250x250')->display();
+            return;
+
+        }
+        
+        public function render(){
+            // Render file patch local: app/View/upload/images/path/name.jpg'
+            exit($this->fileStorage->renderFile('images/path/name.jpg', 'local'));
         }
 }
 
