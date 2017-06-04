@@ -16,7 +16,7 @@ $localAdapter = new Local(dirname(__DIR__).'/../app/View/uploads', LOCK_EX, Loca
     ]
 ]);
 
-$webAdapter = new Local(dirname(__DIR__).'/../../app/web', LOCK_EX, Local::DISALLOW_LINKS, [
+$webAdapter = new Local(dirname(__DIR__).'/../web', LOCK_EX, Local::DISALLOW_LINKS, [
     'file' => [
         'public' => 0744,
         'private' => 0700,
