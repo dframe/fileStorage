@@ -9,7 +9,7 @@ use Dframe\fileStorage\Image;
 
 
 #UserFile
-class storage  {
+class Storage  {
 
     public function __construct($driver = false){
     	$this->driver = $driver;
