@@ -5,7 +5,7 @@ use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 use Imagecraft\ImageBuilder;
-use Dframe\fileStorage\Image;
+use Dframe\fileStorage\image;
 
 
 #UserFile
