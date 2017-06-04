@@ -12,5 +12,8 @@
             "name": "Slawek Kaleta",
             "email": "slaszka@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+                "psr-4": { "Dframe\\fileStorage\\": "src/" }
+    }
 }
