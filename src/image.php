@@ -1,10 +1,10 @@
 <?php
 namespace Dframe\fileStorage;
-use \League\Flysystem\MountManager;
-use \Dframe\Config;
-use \Dframe\View;
-use \Dframe\Router;
-use \Imagecraft\ImageBuilder;
+use League\Flysystem\MountManager;
+use Dframe\Config;
+use Dframe\View;
+use Dframe\Router;
+use Imagecraft\ImageBuilder;
 
 #UserFile
 class image{
@@ -52,6 +52,7 @@ class image{
         $sourceAdapter = 'web://'.$orginalImage;
 
         $has = $this->manager->has($cacheAdapter);
+
         if($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-1 minute"))){
 
             if($has == true) // zrobić update zamiast delete 

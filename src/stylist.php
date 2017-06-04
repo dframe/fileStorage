@@ -12,6 +12,7 @@ namespace Dframe\fileStorage;
  * 
  * Podklasy stylistow powinny znajdowac sie w folderze stylists
  */
+
 abstract class stylist {
 	
 	/**
