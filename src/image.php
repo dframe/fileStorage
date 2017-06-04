@@ -7,7 +7,7 @@ use Dframe\Router;
 use Imagecraft\ImageBuilder;
 
 #UserFile
-class image{
+class image {
     public $stylist = 'orginal';
     public $size;
 
