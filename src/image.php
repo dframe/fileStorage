@@ -218,7 +218,7 @@ class image {
             return new $className();
     	}
 
-        require_once appDir.'../app/Libs/Plugins/Stylist/'.$stylist.'.php';
+        require_once appDir.'../app/Libs/Plugins/stylist/'.$stylist.'.php';
         $className = '\\Libs\\Plugins\\Stylist\\'.$stylist;
         if(!class_exists($className) OR !method_exists($className, 'stylize')){
             throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
