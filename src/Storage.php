@@ -40,23 +40,24 @@ class Storage  {
     //     return false;
     // }
 
-    public function getFile($file){
+    //public function url($file){
 
-        $sourceAdapter = 'local://'.$file;
-        if($this->manager->has($sourceAdapter)){
+        //$sourceAdapter = 'local://'.$file;
+        //if($this->manager->has($sourceAdapter)){
+        //
+        //    // Retrieve a read-stream
+        //    $stream = $filesystem->readStream($sourceAdapter);
+        //    $contents = stream_get_contents($stream);
+        //    fclose($stream);
+        //         
+        //}else
+        //    return false;
 
-            // Retrieve a read-stream
-            $stream = $filesystem->readStream($sourceAdapter);
-            $contents = stream_get_contents($stream);
-            fclose($stream);
-                 
-        }else
-            return false;
-
-        return $this->router->makeUrl('filestorage/file').'?file='.$file;
-    }
+        //return $this->router->makeUrl('filestorage/file/:params?params='.$file);
+    //}
 
     public function renderFile($file, $adapter = 'local'){
+
 
         $fileAdapter = $adapter.'://'.$file;
         // Retrieve a read-stream
