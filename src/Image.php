@@ -1,12 +1,12 @@
 <?php
-namespace Dframe\fileStorage;
+namespace Dframe\FileStorage;
 use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 
 #UserFile
-class image {
+class Image {
     public $stylist = 'orginal';
     public $size;
 
