@@ -26,7 +26,8 @@ class Storage
 
     }
 
-    public function image($image, $default = false){
+    public function image($image, $default = false)
+    {
         return new Image($image, $default, $this);
 
     }
