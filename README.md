@@ -19,10 +19,10 @@ namespace Controller;
  * 
  */
 
-class myFileSystem extends \Dframe\Controller 
+class MyFileSystem extends \Dframe\Controller 
 {
     public function init(){
-        $this->fileStorage = new \Dframe\fileStorage\Storage($this->loadModel('fileStorage/drivers/databaseDriver'));
+        $this->fileStorage = new \Dframe\FileStorage\Storage($this->loadModel('FileStorage/Drivers/DatabaseDriver'));
     }
 
     public function index(){

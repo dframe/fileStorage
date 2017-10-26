@@ -9,7 +9,7 @@ use Imagecraft\ImageBuilder;
  * tablicy $stylistParam jako wpisy o kluczach 'w' i 'h'
  */
 
-class rectStylist extends \Dframe\fileStorage\stylist {
+class RectStylist extends \Dframe\FileStorage\Stylist {
 
 
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
