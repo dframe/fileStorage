@@ -6,7 +6,7 @@ use Imagecraft\ImageBuilder;
  * Zwraca obrazek taki jakim jest
  */
 
-class simpleStylist extends \Dframe\fileStorage\stylist {
+class SimpleStylist extends \Dframe\fileStorage\stylist {
 
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
 
