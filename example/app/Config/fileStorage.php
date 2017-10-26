@@ -5,7 +5,8 @@ use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\Cached\Storage\Memory as CacheStore;
 
 
-$localAdapter = new Local(dirname(__DIR__).'/../app/View/uploads', LOCK_EX, Local::DISALLOW_LINKS, [
+$localAdapter = new Local(
+    dirname(__DIR__).'/../app/View/uploads', LOCK_EX, Local::DISALLOW_LINKS, [
     'file' => [
         'public' => 0744,
         'private' => 0700,
@@ -14,9 +15,11 @@ $localAdapter = new Local(dirname(__DIR__).'/../app/View/uploads', LOCK_EX, Loca
         'public' => 0755,
         'private' => 0700,
     ]
-]);
+    ]
+);
 
-$webAdapter = new Local(dirname(__DIR__).'/../web', LOCK_EX, Local::DISALLOW_LINKS, [
+$webAdapter = new Local(
+    dirname(__DIR__).'/../web', LOCK_EX, Local::DISALLOW_LINKS, [
     'file' => [
         'public' => 0744,
         'private' => 0700,
@@ -25,9 +28,11 @@ $webAdapter = new Local(dirname(__DIR__).'/../web', LOCK_EX, Local::DISALLOW_LIN
         'public' => 0755,
         'private' => 0700,
     ]
-]);
+    ]
+);
 
-$cacheAdapter = new Local(dirname(__DIR__).'/../app/View/cache', LOCK_EX, Local::DISALLOW_LINKS, [
+$cacheAdapter = new Local(
+    dirname(__DIR__).'/../app/View/cache', LOCK_EX, Local::DISALLOW_LINKS, [
     'file' => [
         'public' => 0744,
         'private' => 0700,
@@ -36,7 +41,8 @@ $cacheAdapter = new Local(dirname(__DIR__).'/../app/View/cache', LOCK_EX, Local:
         'public' => 0755,
         'private' => 0700,
     ]
-]);
+    ]
+);
         
 // Create the cache store
 $cacheStore = new CacheStore();
@@ -51,9 +57,9 @@ $web = new Filesystem($webAdapter);
 
 return array(
     'pluginsDir' => dirname(__DIR__).'/../app/'
-	'adapters' => array(
-		'local' => $local,
+    'adapters' => array(
+        'local' => $local,
         'cache' => $cacheFilesystem,
         'web' => $web
-		)
+        )
 );

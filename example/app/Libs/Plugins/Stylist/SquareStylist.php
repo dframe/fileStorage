@@ -9,9 +9,11 @@ use Imagecraft\ImageBuilder;
  * tablicy $stylistParam jako wpis o kluczu 'size'
  */
 
-class SquareStylist extends \Dframe\FileStorage\Stylist {
+class SquareStylist extends \Dframe\FileStorage\Stylist
+{
 
-    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
+    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
+    {
 
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
@@ -21,12 +23,11 @@ class SquareStylist extends \Dframe\FileStorage\Stylist {
         $layer->contents($contents);
         
         
-		if(isset($stylistParam['size'])){
-			$size = $stylistParam['size'];
-		}
-		else{
-			$size = '100';
-		}
+        if (isset($stylistParam['size'])) {
+            $size = $stylistParam['size'];
+        } else {
+            $size = '100';
+        }
         
         $layer->resize($size, $size, 'fill_crop');
         
@@ -44,18 +45,18 @@ class SquareStylist extends \Dframe\FileStorage\Stylist {
         rewind($tmpFile);
         return $tmpFile;
 
-	}
+    }
 
-	public function identify($stylistParam){
-		if(isset($stylistParam['size'])){
-			$size = $stylistParam['size'];
-		}
-		else{
-			$size = '100';
-		}
+    public function identify($stylistParam)
+    {
+        if (isset($stylistParam['size'])) {
+            $size = $stylistParam['size'];
+        } else {
+            $size = '100';
+        }
 
-		return 'squareStylist-'.$size;
-	}
+        return 'squareStylist-'.$size;
+    }
 
 
 

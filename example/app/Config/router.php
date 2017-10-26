@@ -10,11 +10,10 @@
  *   Przykład poprawnego użycia
  *   grupa/1
  *   grupa
- *
-*/
+ */
 
 return array(
-	'https' => false,
+    'https' => false,
     'NAME_CONTROLLER' => 'page',
     'NAME_METHOD' => 'index',
     'publicWeb' => '',
@@ -38,13 +37,13 @@ return array(
         ),
 
     'error/404' => array(
-    	'error/404', 
-    	'task=page&action=404'
+        'error/404', 
+        'task=page&action=404'
     ),
 
     'error/500' => array(
-    	'error/500', 
-    	'task=page&action=500'
+        'error/500', 
+        'task=page&action=500'
     ),
 
     'default' => array(

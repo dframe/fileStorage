@@ -9,10 +9,12 @@ use Imagecraft\ImageBuilder;
  * tablicy $stylistParam jako wpisy o kluczach 'w' i 'h'
  */
 
-class RectStylist extends \Dframe\FileStorage\Stylist {
+class RectStylist extends \Dframe\FileStorage\Stylist
+{
 
 
-    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
+    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
+    {
 
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
@@ -38,10 +40,11 @@ class RectStylist extends \Dframe\FileStorage\Stylist {
 
     }
 
-	public function identify($stylistParam){
+    public function identify($stylistParam)
+    {
 
-		return 'rectStylist-'.$stylistParam['w'].'-'.$stylistParam['h'];
-	}
+        return 'rectStylist-'.$stylistParam['w'].'-'.$stylistParam['h'];
+    }
 
 
 
