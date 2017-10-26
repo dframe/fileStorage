@@ -8,7 +8,7 @@ namespace Dframe\fileStorage\drivers;
  * A default, static ArrayDriver implementation comes with this package.
  */
 
-interface databaseDriver {
+interface databaseDriverInterface {
 
 	public function get($adapter, $path);
 	

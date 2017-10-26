@@ -1,5 +1,5 @@
 <?php
-namespace Libs\Plugins\stylist;
+namespace Libs\Plugins\Stylist;
 use Imagecraft\ImageBuilder;
 
 /*
