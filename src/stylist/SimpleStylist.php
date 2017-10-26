@@ -6,9 +6,11 @@ use Imagecraft\ImageBuilder;
  * Zwraca obrazek taki jakim jest
  */
 
-class SimpleStylist extends \Dframe\FileStorage\Stylist {
+class SimpleStylist extends \Dframe\FileStorage\Stylist
+{
 
-    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
+    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
+    {
 
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
@@ -33,8 +35,9 @@ class SimpleStylist extends \Dframe\FileStorage\Stylist {
 
     }
 
-	public function identify($stylistParam){
-		return 'simpleStylist';
-	}
+    public function identify($stylistParam)
+    {
+        return 'simpleStylist';
+    }
 
 }
