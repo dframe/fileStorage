@@ -1,5 +1,5 @@
 <?php
-namespace Dframe\fileStorage\drivers;
+namespace Dframe\FileStorage\Drivers;
 
 /**
  * A contract to identify an implementation to store permissions to
@@ -8,7 +8,7 @@ namespace Dframe\fileStorage\drivers;
  * A default, static ArrayDriver implementation comes with this package.
  */
 
-interface databaseDriverInterface {
+interface DatabaseDriverInterface {
 
 	public function get($adapter, $path);
 	
