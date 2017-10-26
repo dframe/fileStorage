@@ -1,11 +1,11 @@
 <?php
-namespace Dframe\fileStorage;
+namespace Dframe\FileStorage;
 use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 use Imagecraft\ImageBuilder;
-use Dframe\fileStorage\image;
+use Dframe\FileStorage\Image;
 
 
 #UserFile
@@ -25,7 +25,7 @@ class Storage  {
     }
 
     public function image($image, $default = false){
-        return new image($image, $default, $this);
+        return new Image($image, $default, $this);
     }
 
     // public function makeUrl($file){
