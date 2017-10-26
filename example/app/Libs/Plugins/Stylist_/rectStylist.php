@@ -3,13 +3,14 @@ namespace Libs\Plugins\stylist;
 use Imagecraft\ImageBuilder;
 
 /*
- * Abstrakcyjna klasa kwadratowego stylisty
- * Wycina kwadrat ze srodkowej czesci obrazka
- * Bok kwadratu ma dlugosc w pikselach, podana w
- * tablicy $stylistParam jako wpis o kluczu 'size'
+ * Abstrakcyjna klasa prostokatnego stylisty
+ * Wycina prostokat ze srodkowej czesci obrazka
+ * Boki prostokata maja dlugosc w pikselach, podane w
+ * tablicy $stylistParam jako wpisy o kluczach 'w' i 'h'
  */
 
-class squareStylist extends \Dframe\fileStorage\stylist {
+class rectStylist extends \Dframe\fileStorage\stylist {
+
 
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
 
@@ -19,16 +20,7 @@ class squareStylist extends \Dframe\fileStorage\stylist {
         $layer = $builder->addBackgroundLayer();
         $contents = stream_get_contents($originStream);
         $layer->contents($contents);
-        
-        
-		if(isset($stylistParam['size'])){
-			$size = $stylistParam['size'];
-		}
-		else{
-			$size = '100';
-		}
-        
-        $layer->resize($size, $size, 'fill_crop');
+        $layer->resize($stylistParam['w'], $stylistParam['h'], 'fill_crop');
         
         fclose($originStream);
         
@@ -44,17 +36,11 @@ class squareStylist extends \Dframe\fileStorage\stylist {
         rewind($tmpFile);
         return $tmpFile;
 
-	}
+    }
 
 	public function identify($stylistParam){
-		if(isset($stylistParam['size'])){
-			$size = $stylistParam['size'];
-		}
-		else{
-			$size = '100';
-		}
 
-		return 'squareStylist-'.$size;
+		return 'rectStylist-'.$stylistParam['w'].'-'.$stylistParam['h'];
 	}
 
 
