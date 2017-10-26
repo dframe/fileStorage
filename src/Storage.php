@@ -1,11 +1,11 @@
 <?php
-namespace Dframe\fileStorage;
+namespace Dframe\FileStorage;
 use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 use Imagecraft\ImageBuilder;
-use Dframe\fileStorage\image;
+use Dframe\FileStorage\Image;
 
 
 // UserFile
@@ -26,9 +26,9 @@ class Storage
 
     }
 
-    public function image($image, $default = false)
-    {
-        return new image($image, $default, $this);
+    public function image($image, $default = false){
+        return new Image($image, $default, $this);
+
     }
 
     // public function makeUrl($file){
@@ -42,6 +42,7 @@ class Storage
 
     //     return false;
     // }
+
 
     public function getFile($file)
     {
@@ -61,8 +62,10 @@ class Storage
         return $this->router->makeUrl('filestorage/file').'?file='.$file;
     }
 
+
     public function renderFile($file, $adapter = 'local')
     {
+
 
         $fileAdapter = $adapter.'://'.$file;
         // Retrieve a read-stream

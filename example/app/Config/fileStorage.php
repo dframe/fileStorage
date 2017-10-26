@@ -50,7 +50,7 @@ $local = new Filesystem($localAdapter);
 $web = new Filesystem($webAdapter);
 
 return array(
-    'pluginsDir' => dirname(__DIR__).'/../app/Libs/Plugins/'
+    'pluginsDir' => dirname(__DIR__).'/../app/'
 	'adapters' => array(
 		'local' => $local,
         'cache' => $cacheFilesystem,

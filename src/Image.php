@@ -1,12 +1,12 @@
 <?php
-namespace Dframe\fileStorage;
+namespace Dframe\FileStorage;
 use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 
-class image
-{
+class Image {
+
     public $stylist = 'orginal';
     public $size;
 
@@ -227,8 +227,8 @@ class image
 
         if (empty($stylist) OR $stylist == 'simpleStylist') {
 
-            include_once $pluginsDir.'stylist/simpleStylist.php';
-            $className = '\\Dframe\\fileStorage\\stylist\\simpleStylist';
+            //include_once $pluginsDir.'Libs/Plugins/Stylist/SimpleStylist.php';
+            $className = '\\Dframe\\FileStorage\\Stylist\\SimpleStylist';
             if (!class_exists($className) OR !method_exists($className, 'stylize')) {
                 throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
                 return null;
@@ -237,7 +237,7 @@ class image
             return new $className();
         }
 
-        include_once $pluginsDir.'stylist/'.$stylist.'.php';
+        include_once $pluginsDir.'Stylist/'.$stylist.'.php';
         $className = '\\Libs\\Plugins\\Stylist\\'.$stylist;
         if (!class_exists($className) OR !method_exists($className, 'stylize')) {
             throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');

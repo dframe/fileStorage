@@ -1,12 +1,12 @@
 <?php
-namespace Dframe\fileStorage\stylist;
+namespace Dframe\FileStorage\Stylist;
 use Imagecraft\ImageBuilder;
 /*
  * Prosty stylista
  * Zwraca obrazek taki jakim jest
  */
 
-class simpleStylist extends \Dframe\fileStorage\stylist {
+class SimpleStylist extends \Dframe\FileStorage\Stylist {
 
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false){
 
