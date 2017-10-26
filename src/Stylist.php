@@ -1,5 +1,5 @@
 <?php
-namespace Dframe\fileStorage;
+namespace Dframe\FileStorage;
 
 /*
  * Klasa abstrakcyjna stylisty
@@ -13,7 +13,7 @@ namespace Dframe\fileStorage;
  * Podklasy stylistow powinny znajdowac sie w folderze stylists
  */
 
-abstract class stylist {
+abstract class Stylist {
 	
 	/**
 	 * Pobiera oryginal i zwraca w przetworzonej formie. Dane wejsciowe to reource obrazu dla biblioteki
