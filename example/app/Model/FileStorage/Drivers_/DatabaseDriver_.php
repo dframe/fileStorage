@@ -1,8 +1,8 @@
 <?php
-namespace Model\fileStorage\drivers;
+namespace Model\FileStorage\Drivers;
 use Dframe\fileStorage\drivers\databaseDriver;
 
-class databaseDriverModel extends \Model\Model implements databaseDriver 
+class DatabaseDriverModel extends \Model\Model implements DatabaseDriver 
 {
 
 	public function get($adapter, $path, $cache = false){
