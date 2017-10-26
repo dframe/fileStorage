@@ -8,11 +8,13 @@ use Imagecraft\ImageBuilder;
 use Dframe\fileStorage\image;
 
 
-#UserFile
-class Storage  {
+// UserFile
+class Storage
+{
 
-    public function __construct($driver = false){
-    	$this->driver = $driver;
+    public function __construct($driver = false)
+    {
+        $this->driver = $driver;
 
         //Default
         //$configFileStorage = Config::load('config', 'app/Libs/Plugins/fileStorage');
@@ -24,7 +26,8 @@ class Storage  {
 
     }
 
-    public function image($image, $default = false){
+    public function image($image, $default = false)
+    {
         return new image($image, $default, $this);
     }
 
@@ -40,27 +43,30 @@ class Storage  {
     //     return false;
     // }
 
-    public function getFile($file){
+    public function getFile($file)
+    {
 
         $sourceAdapter = 'local://'.$file;
-        if($this->manager->has($sourceAdapter)){
+        if($this->manager->has($sourceAdapter)) {
 
             // Retrieve a read-stream
             $stream = $filesystem->readStream($sourceAdapter);
             $contents = stream_get_contents($stream);
             fclose($stream);
                  
-        }else
+        }else {
             return false;
+        }
 
         return $this->router->makeUrl('filestorage/file').'?file='.$file;
     }
 
-    public function renderFile($file, $adapter = 'local'){
+    public function renderFile($file, $adapter = 'local')
+    {
 
         $fileAdapter = $adapter.'://'.$file;
         // Retrieve a read-stream
-        if(!$this->manager->has($fileAdapter)){
+        if(!$this->manager->has($fileAdapter)) {
             header("HTTP/1.0 404 Not Found");
             echo "<h1>404 Not Found</h1>";
             echo "The page that you have requested could not be found.";
@@ -78,22 +84,26 @@ class Storage  {
 
     }
 
-    public function drop($adapter, $file){
+    public function drop($adapter, $file)
+    {
         $get = $this->driver->get($adapter, $file, true);
-        if($get['return'] == true){
-            if(!empty($get['cache'])){
+        if($get['return'] == true) {
+            if(!empty($get['cache'])) {
                 foreach ($get['cache'] as $key => $value) {
-                    if($this->manager->has($adapter.'://'.$value['file_cache_path']))
+                    if($this->manager->has($adapter.'://'.$value['file_cache_path'])) {
                         $this->manager->delete($adapter.'://'.$value['file_cache_path']);
+                    }
                 }
             }
 
-            if($this->manager->has($adapter.'://'.$get['file_path']))
+            if($this->manager->has($adapter.'://'.$get['file_path'])) {
                 $this->manager->delete($adapter.'://'.$get['file_path']);
+            }
 
             $drop = $this->driver->drop($adapter, $file);
-            if($drop['return'] != true)
-               return array('return' => false, 'response' => $drop['response']);
+            if($drop['return'] != true) {
+                return array('return' => false, 'response' => $drop['response']);
+            }
                 
             return array('return' => true, 'response' => 'Pomyślnie usunięto');
         }
@@ -102,15 +112,17 @@ class Storage  {
     }
 
 
-    public function put($adapter, $tmp_name, $pathImage, $forced = false){
+    public function put($adapter, $tmp_name, $pathImage, $forced = false)
+    {
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $tmp_name);
         finfo_close($finfo);
 
-        if($this->manager->has($adapter.'://'.$pathImage)){
-        	if($forced == false)
-        		return array('return' => false, 'response' => 'File Exist');
+        if($this->manager->has($adapter.'://'.$pathImage)) {
+            if($forced == false) {
+                return array('return' => false, 'response' => 'File Exist');
+            }
             
             $this->manager->delete($adapter.'://'.$pathImage);
         }
@@ -120,7 +132,7 @@ class Storage  {
         fclose($stream);
             
         $put = $this->driver->put($adapter, $pathImage, $mime);
-        if($put['return'] != false){
+        if($put['return'] != false) {
             return array('return' => true, 'fileId' => $put['lastInsertId']);
         }else{
             $get = $this->driver->get($adapter.'local', $pathImage);

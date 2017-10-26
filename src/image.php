@@ -5,12 +5,13 @@ use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 
-#UserFile
-class image {
+class image
+{
     public $stylist = 'orginal';
     public $size;
 
-    public function __construct($image, $default = false, $storage){
+    public function __construct($image, $default = false, $storage)
+    {
         $configFileStorage = Config::load('fileStorage');
 
         $adapters = $configFileStorage->get('adapters', array());
@@ -22,17 +23,20 @@ class image {
 
     }
   
-    public function stylist($stylist = false){
+    public function stylist($stylist = false)
+    {
         $this->stylist = $stylist;
         return $this;
     }
 
-    public function size($size){
+    public function size($size)
+    {
         $this->size = $size;
         return $this;
     }
 
-    private function displayDefault(){
+    private function _displayDefault()
+    {
         $orginalImage = $this->defaultImage;
 
         $output = array();
@@ -42,8 +46,9 @@ class image {
         $ext = substr($orginalImage, strrpos($orginalImage, "."));
     
         $path = $output['stylist'];
-        if(isset($output['size']) AND !empty($output['size']));
-           $path .= '-'.$this->size;
+        if (isset($output['size']) AND !empty($output['size'])) {
+        }
+        $path .= '-'.$this->size;
         $cache = basename($orginalImage, $ext).'-'.$path.'-'.md5('+'.$path.'+'.$orginalImage.'+').$ext;
         $cache = str_replace(basename($orginalImage, $ext).$ext, $cache, $orginalImage);
 
@@ -52,20 +57,21 @@ class image {
 
         $has = $this->manager->has($cacheAdapter);
 
-        if($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-1 minute"))){
+        if ($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-1 minute"))) {
 
-            if($has == true) // zrobić update zamiast delete 
+            if ($has == true) { // zrobić update zamiast delete 
                 $this->manager->delete($cacheAdapter);
+            }
 
-            if($this->manager->has($sourceAdapter)){
+            if ($this->manager->has($sourceAdapter)) {
                 $mimetype = $this->manager->getMimetype($sourceAdapter);
-                if(!empty($output)){
+                if (!empty($output)) {
 
                     $getStylist = $this->getStylist($output['stylist'].'Stylist');
                     $readStream = $this->manager->readStream($sourceAdapter);
                     $putStream = $getStylist->stylize($readStream, null, $getStylist, $output);
 
-                }else{
+                } else{
                     // Retrieve a read-stream
                     $stream = $this->manager->readStream($sourceAdapter);
                     $contents = stream_get_contents($stream);
@@ -79,15 +85,17 @@ class image {
 
                 $this->manager->putStream($cacheAdapter, $putStream);
 
-                if(!empty($this->storage->driver)){
+                if (!empty($this->storage->driver)) {
                     $this->storage->driver->cache('web', $orginalImage, $cache, $mimetype);
                 }
                 
-                if (is_resource($putStream))
+                if (is_resource($putStream)) {
                     fclose($putStream);
+                }
         
-            }else
+            } else {
                 return false;
+            }
         }
 
         $this->cache = $cache;
@@ -95,7 +103,8 @@ class image {
         return $this->router->makeUrl('filestorage/images/:params?params='.$cache);
     }
 
-    public function display($adapter = 'local'){
+    public function display($adapter = 'local')
+    {
         $orginalImage = $this->orginalImage;
 
         $output = array();
@@ -105,7 +114,8 @@ class image {
         $ext = substr($orginalImage, strrpos($orginalImage, "."));
     
         $path = $output['stylist'];
-        if(isset($output['size']) AND !empty($output['size']));
+        if (isset($output['size']) AND !empty($output['size'])) {
+        }
            $path .= '-'.$this->size;
     
         $cache = basename($orginalImage, $ext).'-'.$path.'-'.md5('+'.$path.'+'.$orginalImage.'+').$ext;
@@ -115,20 +125,21 @@ class image {
         $sourceAdapter = $adapter.'://'.$orginalImage;
 
         $has = $this->manager->has($cacheAdapter);
-        if($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-1 minute"))){
+        if ($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-1 minute"))) {
 
-            if($has == true) // zrobić update zamiast delete 
+            if ($has == true) { // zrobić update zamiast delete 
                 $this->manager->delete($cacheAdapter);
+            }
             
-            if($this->manager->has($sourceAdapter)){
-              $mimetype = $this->manager->getMimetype($sourceAdapter);
+            if ($this->manager->has($sourceAdapter)) {
+                $mimetype = $this->manager->getMimetype($sourceAdapter);
 
-                if(!empty($output)){
+                if (!empty($output)) {
                     $getStylist = $this->getStylist($output['stylist'].'Stylist');
                     $readStream = $this->manager->readStream($sourceAdapter);
                     $putStream = $getStylist->stylize($readStream, null, $getStylist, $output);
 
-                }else{
+                } else{
                     // Retrieve a read-stream
                     $stream = $this->manager->readStream($sourceAdapter);
                     $contents = stream_get_contents($stream);
@@ -141,30 +152,34 @@ class image {
                 }
 
 
-                if(!empty($this->storage)){
+                if (!empty($this->storage)) {
                     $this->storage->driver->cache($adapter, $orginalImage, $cache, $mimetype);
                     $this->manager->putStream($cacheAdapter, $putStream);
        
-                }else
+                } else {
                     return false;
+                }
                 
-                if (is_resource($putStream))
+                if (is_resource($putStream)) {
                     fclose($putStream);
+                }
                
 
-            }elseif(!empty($this->defaultImage)){
+            } elseif (!empty($this->defaultImage)) {
                 $get = $this->storage->driver->get($adapter, $orginalImage, true);
-                if($get['return'] == true){
+                if ($get['return'] == true) {
                     foreach ($get['cache'] as $key => $value) {
-                        if($this->manager->has('cache://'.$value['file_cache_path']))
+                        if ($this->manager->has('cache://'.$value['file_cache_path'])) {
                             $this->manager->delete('cache://'.$value['file_cache_path']);
+                        }
                     }
                     //$this->storage->driver->drop($orginalImage);
                 }
-                return $this->displayDefault(); //zwracać bład
+                return $this->_displayDefault(); //zwracać bład
                 
-            }else
+            } elseif {
                 return false;
+            }
         }
 
         $this->cache = $cache;
@@ -173,11 +188,12 @@ class image {
     }
 
 
-    public function renderFile($file, $adapter = 'local'){
+    public function renderFile($file, $adapter = 'local')
+    {
 
         $fileAdapter = $adapter.'://'.$file;
         // Retrieve a read-stream
-        if(!$this->manager->has($fileAdapter)){
+        if (!$this->manager->has($fileAdapter)) {
             header("HTTP/1.0 404 Not Found");
             echo "<h1>404 Not Found</h1>";
             echo "The page that you have requested could not be found.";
@@ -199,33 +215,36 @@ class image {
     /**
      * Zwraca obiekt stylisty o wskazanej nazwie
      * Tylko do uzytku wewnatrz klasy!
-     * @param string $stylist
+     *
+     * @param  string $stylist
      * @return Dframe/Libs/Stylist
      */
-    protected function getStylist($stylist){
+    protected function getStylist($stylist)
+    {
+        $configFileStorage = Config::load('fileStorage');
+        $pluginsDir = $configFileStorage->get('pluginsDir', '');
 
 
+        if (empty($stylist) OR $stylist == 'simpleStylist') {
 
-    	if(empty($stylist) OR $stylist == 'simpleStylist'){
-
-            require_once appDir.'/simpleStylist.php';
+            include_once $pluginsDir.'stylist/simpleStylist.php';
             $className = '\\Dframe\\fileStorage\\stylist\\simpleStylist';
-            if(!class_exists($className) OR !method_exists($className, 'stylize')){
+            if (!class_exists($className) OR !method_exists($className, 'stylize')) {
                 throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
-                return NULL;
+                return null;
             }
     
             return new $className();
-    	}
-
-        require_once appDir.'../app/Libs/Plugins/stylist/'.$stylist.'.php';
-        $className = '\\Libs\\Plugins\\Stylist\\'.$stylist;
-        if(!class_exists($className) OR !method_exists($className, 'stylize')){
-            throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
-            return NULL;
         }
 
-    return new $className();
+        include_once $pluginsDir.'stylist/'.$stylist.'.php';
+        $className = '\\Libs\\Plugins\\Stylist\\'.$stylist;
+        if (!class_exists($className) OR !method_exists($className, 'stylize')) {
+            throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
+            return null;
+        }
+
+        return new $className();
     }
 
 }
