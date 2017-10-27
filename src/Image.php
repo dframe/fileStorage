@@ -177,7 +177,7 @@ class Image {
                 }
                 return $this->_displayDefault(); //zwracać bład
                 
-            } elseif {
+            } else {
                 return false;
             }
         }
@@ -237,7 +237,7 @@ class Image {
             return new $className();
         }
 
-        include_once $pluginsDir.'Stylist/'.$stylist.'.php';
+        include_once $pluginsDir.'Libs/Plugins/Stylist/'.$stylist.'.php';
         $className = '\\Libs\\Plugins\\Stylist\\'.$stylist;
         if (!class_exists($className) OR !method_exists($className, 'stylize')) {
             throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
