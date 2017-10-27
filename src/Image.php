@@ -225,7 +225,7 @@ class Image {
         $pluginsDir = $configFileStorage->get('pluginsDir', '');
 
 
-        if (empty($stylist) OR $stylist == 'simpleStylist') {
+        if (empty($stylist) OR $stylist == 'SimpleStylist') {
 
             //include_once $pluginsDir.'Libs/Plugins/Stylist/SimpleStylist.php';
             $className = '\\Dframe\\FileStorage\\Stylist\\SimpleStylist';
