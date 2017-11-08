@@ -5,7 +5,8 @@ use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 
-class Image {
+class Image
+{
 
     public $stylist = 'orginal';
     public $size;
@@ -115,9 +116,9 @@ class Image {
     
         $path = $output['stylist'];
         if (isset($output['size']) AND !empty($output['size'])) {
+            $path .= '-'.$this->size;
         }
-           $path .= '-'.$this->size;
-    
+           
         $cache = basename($orginalImage, $ext).'-'.$path.'-'.md5('+'.$path.'+'.$orginalImage.'+').$ext;
         $cache = str_replace(basename($orginalImage, $ext).$ext, $cache, $orginalImage);
 
@@ -194,10 +195,11 @@ class Image {
         $fileAdapter = $adapter.'://'.$file;
         // Retrieve a read-stream
         if (!$this->manager->has($fileAdapter)) {
-            header("HTTP/1.0 404 Not Found");
-            echo "<h1>404 Not Found</h1>";
-            echo "The page that you have requested could not be found.";
-            exit();
+
+            $body = "<h1>404 Not Found</h1> \n\r".
+                    "The page that you have requested could not be found.";
+            
+            return Response::render($body)->status(404);
         }
 
         $getMimetype = $this->manager->getMimetype($fileAdapter);
@@ -205,10 +207,7 @@ class Image {
         $contents = stream_get_contents($stream);
         fclose($stream);
         
-        header('Content-type: '.$getMimetype);
-        echo $contents;
-        exit();
-
+        return Response::render($contents)->header(array('Content-type' => $getMimetype));
     }
 
 
@@ -223,7 +222,6 @@ class Image {
     {
         $configFileStorage = Config::load('fileStorage');
         $pluginsDir = $configFileStorage->get('pluginsDir', '');
-
 
         if (empty($stylist) OR $stylist == 'SimpleStylist') {
 
