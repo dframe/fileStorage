@@ -4,9 +4,8 @@ use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
-use Imagecraft\ImageBuilder;
 use Dframe\FileStorage\Image;
-
+use Dframe\Router\Response;
 
 // UserFile
 class Storage
@@ -32,31 +31,19 @@ class Storage
 
     }
 
-    // public function makeUrl($file){
-    //     $file = str_replace('?', '&', $file);
-    //     parse_str('file='.$file, $output);
-
-    //     if($this->get($output['file'], $output)){
-    //        $router = new Router();
-    //        return $router->makeUrl('page/file').'?file='.$file;
-    //     }
-
-    //     return false;
-    // }
-
 
     public function getFile($file)
     {
 
         $sourceAdapter = 'local://'.$file;
-        if($this->manager->has($sourceAdapter)) {
+        if ($this->manager->has($sourceAdapter)) {
 
             // Retrieve a read-stream
             $stream = $filesystem->readStream($sourceAdapter);
             $contents = stream_get_contents($stream);
             fclose($stream);
                  
-        }else {
+        } else {
             return false;
         }
 
@@ -70,11 +57,12 @@ class Storage
 
         $fileAdapter = $adapter.'://'.$file;
         // Retrieve a read-stream
-        if(!$this->manager->has($fileAdapter)) {
-            header("HTTP/1.0 404 Not Found");
-            echo "<h1>404 Not Found</h1>";
-            echo "The page that you have requested could not be found.";
-            exit();
+        if (!$this->manager->has($fileAdapter)) {
+
+            $body = "<h1>404 Not Found</h1> \n\r".
+                    "The page that you have requested could not be found.";
+            
+            return Response::render($body)->status(404);
         }
 
         $getMimetype = $this->manager->getMimetype($fileAdapter);
@@ -82,30 +70,28 @@ class Storage
         $contents = stream_get_contents($stream);
         fclose($stream);
         
-        header('Content-type: '.$getMimetype);
-        echo $contents;
-        exit();
+        return Response::render($contents)->header(array('Content-type' => $getMimetype));
 
     }
 
     public function drop($adapter, $file)
     {
         $get = $this->driver->get($adapter, $file, true);
-        if($get['return'] == true) {
-            if(!empty($get['cache'])) {
+        if ($get['return'] == true) {
+            if (!empty($get['cache'])) {
                 foreach ($get['cache'] as $key => $value) {
-                    if($this->manager->has($adapter.'://'.$value['file_cache_path'])) {
+                    if ($this->manager->has($adapter.'://'.$value['file_cache_path'])) {
                         $this->manager->delete($adapter.'://'.$value['file_cache_path']);
                     }
                 }
             }
 
-            if($this->manager->has($adapter.'://'.$get['file_path'])) {
+            if ($this->manager->has($adapter.'://'.$get['file_path'])) {
                 $this->manager->delete($adapter.'://'.$get['file_path']);
             }
 
             $drop = $this->driver->drop($adapter, $file);
-            if($drop['return'] != true) {
+            if ($drop['return'] != true) {
                 return array('return' => false, 'response' => $drop['response']);
             }
                 
@@ -123,8 +109,8 @@ class Storage
         $mime = finfo_file($finfo, $tmp_name);
         finfo_close($finfo);
 
-        if($this->manager->has($adapter.'://'.$pathImage)) {
-            if($forced == false) {
+        if ($this->manager->has($adapter.'://'.$pathImage)) {
+            if ($forced == false) {
                 return array('return' => false, 'response' => 'File Exist');
             }
             
@@ -136,9 +122,9 @@ class Storage
         fclose($stream);
             
         $put = $this->driver->put($adapter, $pathImage, $mime);
-        if($put['return'] != false) {
+        if ($put['return'] != false) {
             return array('return' => true, 'fileId' => $put['lastInsertId']);
-        }else{
+        } else{
             $get = $this->driver->get($adapter.'local', $pathImage);
             return array('return' => true, 'fileId' => $get['file_id']);
         }
