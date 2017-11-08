@@ -2,7 +2,7 @@
 namespace Libs\Plugins\Stylist;
 use Imagecraft\ImageBuilder;
 
-/*
+/**
  * Abstrakcyjna klasa kwadratowego stylisty
  * Wycina kwadrat ze srodkowej czesci obrazka
  * Bok kwadratu ma dlugosc w pikselach, podana w

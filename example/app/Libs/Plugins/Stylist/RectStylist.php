@@ -2,7 +2,7 @@
 namespace Libs\Plugins\Stylist;
 use Imagecraft\ImageBuilder;
 
-/*
+/**
  * Abstrakcyjna klasa prostokatnego stylisty
  * Wycina prostokat ze srodkowej czesci obrazka
  * Boki prostokata maja dlugosc w pikselach, podane w
