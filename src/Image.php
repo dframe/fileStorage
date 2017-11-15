@@ -16,6 +16,7 @@ class Image
         $configFileStorage = Config::load('fileStorage');
 
         $adapters = $configFileStorage->get('adapters', array());
+        $this->cache = $configFileStorage->get('cache', array('life' => 600));
         $this->manager = new MountManager($adapters);
         $this->router = new Router();
         $this->orginalImage = $image;
@@ -57,8 +58,7 @@ class Image
         $sourceAdapter = 'web://'.$orginalImage;
 
         $has = $this->manager->has($cacheAdapter);
-
-        if ($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-1 minute"))) {
+        if ($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-".$this->cache['life']." seconds"))) {
 
             if ($has == true) { // zrobić update zamiast delete 
                 $this->manager->delete($cacheAdapter);
@@ -126,7 +126,7 @@ class Image
         $sourceAdapter = $adapter.'://'.$orginalImage;
 
         $has = $this->manager->has($cacheAdapter);
-        if ($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-1 minute"))) {
+        if ($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-".$this->cache['life']." seconds"))) {
 
             if ($has == true) { // zrobić update zamiast delete 
                 $this->manager->delete($cacheAdapter);
