@@ -61,5 +61,8 @@ return array(
         'local' => $local,
         'cache' => $cacheFilesystem,
         'web' => $web
-        )
+        ),
+    'cache' => array(
+        'life' => 600 // in seconds
+    )
 );
