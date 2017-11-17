@@ -114,12 +114,18 @@ class Image
 
         $ext = substr($orginalImage, strrpos($orginalImage, "."));
     
-        $path = $output['stylist'];
+        $stylist = $output['stylist'];
         if (isset($output['size']) AND !empty($output['size'])) {
-            $path .= '-'.$this->size;
+            $stylist .= '-'.$this->size;
         }
-           
-        $cache = basename($orginalImage, $ext).'-'.$path.'-'.md5('+'.$path.'+'.$orginalImage.'+').$ext;
+        
+        $cachePath = array();
+        $cachePath[0] = substr(md5($orginalImage), 0, 6);
+        $cachePath[1] = substr(md5($orginalImage), 6, 6);
+        $cachePath[2] = substr(md5($stylist.'+'.$orginalImage), 0, 6);
+        $cachePath[3] = $stylist;
+        
+        $cache = $cachePath[0].'-'.$cachePath[1].'-'.$cachePath[2].'-'.$cachePath[3].$ext;
         $cache = str_replace(basename($orginalImage, $ext).$ext, $cache, $orginalImage);
 
         $cacheAdapter = 'cache://'.$cache; 
