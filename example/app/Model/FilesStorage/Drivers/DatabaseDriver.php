@@ -45,11 +45,10 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
         $cache = $this->baseClass->db->select('files_cache', '*', array('file_cache_path' => $cachePath))->result();
         if (empty($cache['id']) AND !empty($row['file_id'])) {
             $getLastInsertId = $this->baseClass->db->pdoQuery('INSERT INTO `files_cache` (`file_id`, `file_cache_path`, `file_cache_mime`) VALUES (?,?,?)', array($row['file_id'], $cachePath, $mime))->getLastInsertId();
-        } else {
-            return $this->methodResult(false);
-        }
-        
-        return $this->methodResult(true, array('lastInsertId' => $getLastInsertId));
+            return $this->methodResult(true, array('lastInsertId' => $getLastInsertId));
+        } 
+
+        return $this->methodResult(false);
     }
 
     public function drop($adapter, $path) 
@@ -65,6 +64,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
 
             $this->baseClass->db->end();
         } catch (Exception $e) {
+            
             $this->baseClass->db->back();
             return $this->methodResult(false, array('response' => $e->getMessages()));
         }
