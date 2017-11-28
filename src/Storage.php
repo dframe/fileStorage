@@ -70,7 +70,7 @@ class Storage
         $contents = stream_get_contents($stream);
         fclose($stream);
         
-        return Response::render($contents)->header(array('Content-type' => $getMimetype));
+        return Response::render($contents)->headers(array('Content-type' => $getMimetype));
 
     }
 
