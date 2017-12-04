@@ -31,6 +31,7 @@ CREATE TABLE `files` (
   `file_adapter` varchar(255) NOT NULL,
   `file_path` varchar(255) NOT NULL,
   `file_mime` varchar(127) NOT NULL,
+  `file_metadata` varchar(5000) NOT NULL,
   `last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -45,8 +46,9 @@ CREATE TABLE `files_cache` (
   `file_id` int(11) NOT NULL,
   `file_cache_path` varchar(255) NOT NULL,
   `file_cache_mime` varchar(127) NOT NULL,
+  `file_cache_metadata` varchar(5000) NOT NULL,
   `last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Indeksy dla zrzutów tabel

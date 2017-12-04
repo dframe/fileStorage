@@ -23,7 +23,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
         return $this->methodResult(true, $row);
     }
 
-    public function put($adapter, $path, $mime)
+    public function put($adapter, $path, $mime, $stream = false)
     {
         $get = $this->get($adapter, $path);
         if ($get['return'] == true) {
@@ -33,9 +33,10 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
         $getLastInsertId = $this->baseClass->db->pdoQuery('INSERT INTO `files` (`file_adapter`, `file_path`, `file_mime`) VALUES (?,?,?)', array($adapter, $path, $mime))->getLastInsertId();        
         return $this->methodResult(true, array('lastInsertId' => $getLastInsertId));
     }
-
-    public function cache($adapter, $orginalPath, $cachePath, $mime)
+    
+    public function cache($adapter, $orginalPath, $cachePath, $mime, $stream = false)
     {
+
         $row = $this->baseClass->db->select('files', '*', array('file_path' => $orginalPath))->result();
         if (empty($row['file_id'])) {
             $put = $this->put($adapter, $orginalPath, $mime);
@@ -44,7 +45,19 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
 
         $cache = $this->baseClass->db->select('files_cache', '*', array('file_cache_path' => $cachePath))->result();
         if (empty($cache['id']) AND !empty($row['file_id'])) {
-            $getLastInsertId = $this->baseClass->db->pdoQuery('INSERT INTO `files_cache` (`file_id`, `file_cache_path`, `file_cache_mime`) VALUES (?,?,?)', array($row['file_id'], $cachePath, $mime))->getLastInsertId();
+
+            $data = array(
+                'file_id' => $row['file_id'], 
+                'file_cache_path' => $cachePath, 
+                'file_cache_mime' => $mime
+            );
+
+            if($stream != false){
+                $metadata = new \Libs\Plugins\MetadataFile($mime, $stream);
+                $data['file_cache_metadata'] = json_encode($metadata->get());
+            }
+
+            $getLastInsertId = $this->baseClass->db->insert('files_cache', $data);
             return $this->methodResult(true, array('lastInsertId' => $getLastInsertId));
         } 
 
