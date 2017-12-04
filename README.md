@@ -21,11 +21,18 @@ namespace Controller;
 
 class MyFileSystem extends \Dframe\Controller 
 {
-    public function init(){
+    public function init()
+    {
         $this->fileStorage = new \Dframe\FileStorage\Storage($this->loadModel('FileStorage/Drivers/DatabaseDriver'));
+        $this->fileStorage->settings([
+            'stylists' => [
+                'orginal' => \Libs\Plugins\FileStorage\Stylist\OrginalStylist::class
+            ]
+        ]);
     }
 
-    public function index(){
+    public function index()
+    {
    
         $method = $_SERVER['REQUEST_METHOD'];
         switch ($method) {
@@ -72,13 +79,15 @@ class MyFileSystem extends \Dframe\Controller
                 break;
         }
         
-        public function image(){
+        public function image()
+        {
             echo $this->fileStorage->image('images/path/name.jpg')->stylist('square')->size('250x250')->display();
             return;
 
         }
         
-        public function render(){
+        public function render()
+        {
             // Render file patch local: app/View/upload/images/path/name.jpg'
             exit($this->fileStorage->renderFile('images/path/name.jpg', 'local'));
         }

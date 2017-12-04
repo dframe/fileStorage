@@ -9,6 +9,9 @@ class Image
 {
 
     public $stylist = 'orginal';
+    public $stylists = array(
+        'orginal' => \Dframe\Dframe\FileStorage\Stylist\SimpleStylist::class 
+    );
     public $size;
 
     public function __construct($image, $default = false, $storage)
@@ -68,7 +71,7 @@ class Image
                 $mimetype = $this->manager->getMimetype($sourceAdapter);
                 if (!empty($output)) {
 
-                    $getStylist = $this->getStylist($output['stylist'].'Stylist');
+                    $getStylist = $this->getStylist($output['stylist']);
                     $readStream = $this->manager->readStream($sourceAdapter);
                     $putStream = $getStylist->stylize($readStream, null, $getStylist, $output);
 
@@ -144,7 +147,7 @@ class Image
                 $readStream = $this->manager->readStream($sourceAdapter);
          
                 if (!empty($output)) {
-                    $getStylist = $this->getStylist($output['stylist'].'Stylist');
+                    $getStylist = $this->getStylist($output['stylist']);
                     $readStream = $getStylist->stylize($readStream, null, $getStylist, $output);
                 }
 
@@ -202,6 +205,10 @@ class Image
         return Response::render($contents)->header(array('Content-type' => $getMimetype));
     }
 
+    public function addStylist($stylists){
+        $this->stylists = array_merge($this->stylists, $stylists);
+    }
+
 
     /**
      * Zwraca obiekt stylisty o wskazanej nazwie
@@ -210,31 +217,15 @@ class Image
      * @param  string $stylist
      * @return Dframe/Libs/Stylist
      */
-    protected function getStylist($stylist)
+    protected function getStylist($stylist = 'orginal')
     {
-        $configFileStorage = Config::load('fileStorage');
-        $pluginsDir = $configFileStorage->get('pluginsDir', '');
-
-        if (empty($stylist) OR $stylist == 'SimpleStylist') {
-
-            //include_once $pluginsDir.'Libs/Plugins/Stylist/SimpleStylist.php';
-            $className = '\\Dframe\\FileStorage\\Stylist\\SimpleStylist';
-            if (!class_exists($className) OR !method_exists($className, 'stylize')) {
-                throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
-                return null;
-            }
-    
-            return new $className();
-        }
-
-        include_once $pluginsDir.'Libs/Plugins/FileStorage/Stylist/'.$stylist.'.php';
-        $className = '\\Libs\\Plugins\\FileStorage\\Stylist\\'.$stylist;
+        $className = $this->stylists[$stylist];
         if (!class_exists($className) OR !method_exists($className, 'stylize')) {
             throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
-            return null;
         }
 
         return new $className();
+
     }
 
 }

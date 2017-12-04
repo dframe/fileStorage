@@ -27,8 +27,14 @@ class Storage
 
     public function image($image, $default = false)
     {
-        return new Image($image, $default, $this);
+        $image = new Image($image, $default, $this);
+        $image->addStylist($this->settings['stylists']); 
+        return $image;
 
+    }
+
+    public function settings($settings){
+        $this->settings['stylists'] = $settings['stylists'];
     }
 
 
