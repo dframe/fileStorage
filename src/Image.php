@@ -141,35 +141,21 @@ class Image
             if ($this->manager->has($sourceAdapter)) {
                 $mimetype = $this->manager->getMimetype($sourceAdapter);
 
+                $readStream = $this->manager->readStream($sourceAdapter);
+         
                 if (!empty($output)) {
                     $getStylist = $this->getStylist($output['stylist'].'Stylist');
-                    $readStream = $this->manager->readStream($sourceAdapter);
-                    $putStream = $getStylist->stylize($readStream, null, $getStylist, $output);
-
-                } else{
-                    // Retrieve a read-stream
-                    $stream = $this->manager->readStream($sourceAdapter);
-                    $contents = stream_get_contents($stream);
-                    fclose($stream);
-                    
-                    // Create or overwrite using a stream.
-                    $putStream = tmpfile();
-                    fwrite($putStream, $contents);
-                    rewind($putStream);
+                    $readStream = $getStylist->stylize($readStream, null, $getStylist, $output);
                 }
 
-
                 if (!empty($this->storage)) {
-                    $this->storage->driver->cache($adapter, $orginalImage, $cache, $mimetype);
-                    $this->manager->putStream($cacheAdapter, $putStream);
+                    $this->storage->driver->cache($adapter, $orginalImage, $cache, $mimetype, $readStream);
+                    $this->manager->putStream($cacheAdapter, $readStream);
        
                 } else {
                     return false;
                 }
                 
-                if (is_resource($putStream)) {
-                    fclose($putStream);
-                }
                
 
             } elseif (!empty($this->defaultImage)) {

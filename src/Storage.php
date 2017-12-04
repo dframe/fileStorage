@@ -70,7 +70,7 @@ class Storage
         $contents = stream_get_contents($stream);
         fclose($stream);
         
-        return Response::render($contents)->header(array('Content-type' => $getMimetype));
+        return Response::render($contents)->headers(array('Content-type' => $getMimetype));
 
     }
 
@@ -105,26 +105,38 @@ class Storage
     public function put($adapter, $tmp_name, $pathImage, $forced = false)
     {
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $tmp_name);
-        finfo_close($finfo);
+        try {
 
-        if ($this->manager->has($adapter.'://'.$pathImage)) {
-            if ($forced == false) {
-                return array('return' => false, 'response' => 'File Exist');
+
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime = finfo_file($finfo, $tmp_name);
+            finfo_close($finfo);
+    
+            if ($this->manager->has($adapter.'://'.$pathImage)) {
+                if ($forced == false) {
+                    throw new Exception('File Allredy Exist');
+                }
+                
+                $this->manager->delete($adapter.'://'.$pathImage);
             }
             
-            $this->manager->delete($adapter.'://'.$pathImage);
+            $stream = fopen($tmp_name, 'r+');
+            if (!$stream) {
+                throw new Exception('Failed to open uploaded file');
+            }
+
+            $this->manager->writeStream($adapter.'://'.$pathImage, $stream);
+            $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
+            fclose($stream);
+            
+        } catch (Exception $e) {
+            return array('return' => false, 'response' => $e->getMessage());
         }
 
-        $stream = fopen($tmp_name, 'r+');            
-        $this->manager->writeStream($adapter.'://'.$pathImage, $stream);
-        fclose($stream);
-            
-        $put = $this->driver->put($adapter, $pathImage, $mime);
+
         if ($put['return'] != false) {
             return array('return' => true, 'fileId' => $put['lastInsertId']);
-        } else{
+        } else {
             $get = $this->driver->get($adapter.'local', $pathImage);
             return array('return' => true, 'fileId' => $get['file_id']);
         }
