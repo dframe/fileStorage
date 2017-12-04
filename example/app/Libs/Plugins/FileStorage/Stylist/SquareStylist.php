@@ -1,12 +1,15 @@
 <?php
-namespace Libs\Plugins\Stylist;
+namespace Libs\Plugins\FileStorage\Stylist;
 use Imagecraft\ImageBuilder;
 
 /*
- * Stylizer real 
+ * Abstrakcyjna klasa kwadratowego stylisty
+ * Wycina kwadrat ze srodkowej czesci obrazka
+ * Bok kwadratu ma dlugosc w pikselach, podana w
+ * tablicy $stylistParam jako wpis o kluczu 'size'
  */
 
-class RealStylist extends \Dframe\FileStorage\Stylist
+class SquareStylist extends \Dframe\FileStorage\Stylist
 {
 
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
@@ -26,7 +29,7 @@ class RealStylist extends \Dframe\FileStorage\Stylist
             $size = '100';
         }
         
-        $layer->resize($size, $size, 'shrink');
+        $layer->resize($size, $size, 'fill_crop');
         
         fclose($originStream);
         
@@ -52,6 +55,9 @@ class RealStylist extends \Dframe\FileStorage\Stylist
             $size = '100';
         }
 
-        return 'realStylist-'.$size;
+        return 'squareStylist-'.$size;
     }
+
+
+
 }

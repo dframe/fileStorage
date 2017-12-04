@@ -227,8 +227,8 @@ class Image
             return new $className();
         }
 
-        include_once $pluginsDir.'Libs/Plugins/Stylist/'.$stylist.'.php';
-        $className = '\\Libs\\Plugins\\Stylist\\'.$stylist;
+        include_once $pluginsDir.'Libs/Plugins/FileStorage/Stylist/'.$stylist.'.php';
+        $className = '\\Libs\\Plugins\\FileStorage\\Stylist\\'.$stylist;
         if (!class_exists($className) OR !method_exists($className, 'stylize')) {
             throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
             return null;

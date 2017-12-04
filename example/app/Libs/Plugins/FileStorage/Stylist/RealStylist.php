@@ -1,17 +1,13 @@
 <?php
-namespace Libs\Plugins\Stylist;
+namespace Libs\Plugins\FileStorage\Stylist;
 use Imagecraft\ImageBuilder;
 
 /*
- * Abstrakcyjna klasa prostokatnego stylisty
- * Wycina prostokat ze srodkowej czesci obrazka
- * Boki prostokata maja dlugosc w pikselach, podane w
- * tablicy $stylistParam jako wpisy o kluczach 'w' i 'h'
+ * Stylizer real 
  */
 
-class RectStylist extends \Dframe\FileStorage\Stylist
+class RealStylist extends \Dframe\FileStorage\Stylist
 {
-
 
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
@@ -22,7 +18,15 @@ class RectStylist extends \Dframe\FileStorage\Stylist
         $layer = $builder->addBackgroundLayer();
         $contents = stream_get_contents($originStream);
         $layer->contents($contents);
-        $layer->resize($stylistParam['w'], $stylistParam['h'], 'fill_crop');
+        
+        
+        if (isset($stylistParam['size'])) {
+            $size = $stylistParam['size'];
+        } else {
+            $size = '100';
+        }
+        
+        $layer->resize($size, $size, 'shrink');
         
         fclose($originStream);
         
@@ -42,10 +46,12 @@ class RectStylist extends \Dframe\FileStorage\Stylist
 
     public function identify($stylistParam)
     {
+        if (isset($stylistParam['size'])) {
+            $size = $stylistParam['size'];
+        } else {
+            $size = '100';
+        }
 
-        return 'rectStylist-'.$stylistParam['w'].'-'.$stylistParam['h'];
+        return 'realStylist-'.$size;
     }
-
-
-
 }
