@@ -13,9 +13,9 @@ interface DatabaseDriverInterface
 
     public function get($adapter, $path);
     
-    public function put($adapter, $path, $mine);
+    public function put($adapter, $path, $mine, $stream);
 
-    public function cache($adapter, $orginalId, $path, $mine);
+    public function cache($adapter, $orginalId, $path, $mine, $stream);
 
     public function drop($adapter, $path);
 
