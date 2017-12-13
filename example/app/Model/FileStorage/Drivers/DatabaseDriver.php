@@ -16,8 +16,14 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
             return $this->methodResult(false);
         }
 
-        if ($cache == true) {
-            $row['cache'] = $this->baseClass->db->select('files_cache', '*', array('file_id' => $row['file_id']))->results();
+        if ($cache != false) { 
+
+            if ($cache === true) { 
+                $row['cache'] = $this->baseClass->db->select('files_cache', '*', array('file_id' => $row['file_id']))->results();
+            } else { 
+                $row['cache'] = $this->baseClass->db->select('files_cache', '*', array('file_cache_path' => $cache))->result();
+            } 
+
         }
 
         return $this->methodResult(true, $row);

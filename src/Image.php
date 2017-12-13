@@ -53,6 +53,7 @@ class Image
         $path = $output['stylist'];
         if (isset($output['size']) AND !empty($output['size'])) {
         }
+        
         $path .= '-'.$this->size;
         $cache = basename($orginalImage, $ext).'-'.$path.'-'.md5('+'.$path.'+'.$orginalImage.'+').$ext;
         $cache = str_replace(basename($orginalImage, $ext).$ext, $cache, $orginalImage);
@@ -109,7 +110,19 @@ class Image
 
     public function display($adapter = 'local')
     {
-        $orginalImage = $this->orginalImage;
+        $get = $this->cache($adapter, $this->orginalImage);
+        return $this->router->makeUrl('filestorage/images/:params?params='.$get['cache']);
+
+    }
+
+    public function get($adapter = 'local'){
+        $get = $this->cache($adapter, $this->orginalImage);
+
+        $data = $this->storage->driver->get($adapter, $this->orginalImage, $get['cache'], $mimetype, $readStream);
+        return $data;
+    }
+
+    public function cache($adapter, $orginalImage){
 
         $output = array();
         $output['stylist'] = $this->stylist;
@@ -118,6 +131,7 @@ class Image
         $ext = substr($orginalImage, strrpos($orginalImage, "."));
     
         $stylist = $output['stylist'];
+
         if (isset($output['size']) AND !empty($output['size'])) {
             $stylist .= '-'.$this->size;
         }
@@ -158,8 +172,6 @@ class Image
                 } else {
                     return false;
                 }
-                
-               
 
             } elseif (!empty($this->defaultImage)) {
                 $get = $this->storage->driver->get($adapter, $orginalImage, true);
@@ -180,7 +192,10 @@ class Image
 
         $this->cache = $cache;
 
-        return $this->router->makeUrl('filestorage/images/:params?params='.$cache);
+        return array(
+            'cache' => $cache;
+        );
+        //return $this->router->makeUrl('filestorage/images/:params?params='.$cache);
     }
 
 
