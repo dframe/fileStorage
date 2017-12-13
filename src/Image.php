@@ -98,14 +98,16 @@ class Image
                     fclose($putStream);
                 }
         
-            } else {
-                return false;
-            }
+            } 
         }
+
 
         $this->cache = $cache;
 
-        return $this->router->makeUrl('filestorage/images/:params?params='.$cache);
+        return array(
+            'cache' => $cache
+        );
+
     }
 
     public function display($adapter = 'local')
@@ -146,6 +148,7 @@ class Image
         $cache = str_replace(basename($orginalImage, $ext).$ext, $cache, $orginalImage);
 
         $cacheAdapter = 'cache://'.$cache; 
+
         $sourceAdapter = $adapter.'://'.$orginalImage;
 
         $has = $this->manager->has($cacheAdapter);
@@ -185,17 +188,14 @@ class Image
                 }
                 return $this->_displayDefault(); //zwracać bład
                 
-            } else {
-                return false;
-            }
+            } 
         }
 
         $this->cache = $cache;
 
         return array(
-            'cache' => $cache;
+            'cache' => $cache
         );
-        //return $this->router->makeUrl('filestorage/images/:params?params='.$cache);
     }
 
 
