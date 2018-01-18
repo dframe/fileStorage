@@ -45,7 +45,7 @@ class Storage
         if ($this->manager->has($sourceAdapter)) {
 
             // Retrieve a read-stream
-            $stream = $filesystem->readStream($sourceAdapter);
+            $stream = $this->manager->readStream($sourceAdapter);
             $contents = stream_get_contents($stream);
             fclose($stream);
                  
