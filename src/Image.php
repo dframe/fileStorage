@@ -117,14 +117,16 @@ class Image
 
     }
 
-    public function get($adapter = 'local'){
+    public function get($adapter = 'local')
+    {
         $get = $this->cache($adapter, $this->orginalImage);
 
         $data = $this->storage->driver->get($adapter, $this->orginalImage, $get['cache'], $mimetype, $readStream);
         return $data;
     }
 
-    public function cache($adapter, $orginalImage){
+    public function cache($adapter, $orginalImage)
+    {
 
         $output = array();
         $output['stylist'] = $this->stylist;
@@ -220,7 +222,8 @@ class Image
         return Response::render($contents)->header(array('Content-type' => $getMimetype));
     }
 
-    public function addStylist($stylists){
+    public function addStylist($stylists)
+    {
         $this->stylists = array_merge($this->stylists, $stylists);
     }
 

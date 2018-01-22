@@ -58,10 +58,10 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
                 'file_cache_mime' => $mime
             );
 
-            if($stream != false){
-                $metadata = new \Libs\Plugins\MetadataFile($mime, $stream);
-                $data['file_cache_metadata'] = json_encode($metadata->get());
-            }
+            // if($stream != false){
+            //     $metadata = new \Libs\Plugins\FileStorage\MetadataFile($mime, $stream);
+            //     $data['file_cache_metadata'] = json_encode($metadata->get());
+            // }
 
             $getLastInsertId = $this->baseClass->db->insert('files_cache', $data);
             return $this->methodResult(true, array('lastInsertId' => $getLastInsertId));

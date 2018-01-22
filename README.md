@@ -26,7 +26,10 @@ class MyFileSystem extends \Dframe\Controller
         $this->fileStorage = new \Dframe\FileStorage\Storage($this->loadModel('FileStorage/Drivers/DatabaseDriver'));
         $this->fileStorage->settings([
             'stylists' => [
-                'orginal' => \Libs\Plugins\FileStorage\Stylist\OrginalStylist::class
+                'Orginal' => \Libs\Plugins\FileStorage\Stylist\OrginalStylist::class,
+                'Real' => \Libs\Plugins\FileStorage\Stylist\RealStylist::class,
+                'RectStylist' => \Libs\Plugins\FileStorage\Stylist\RectStylist::class,
+                'SquareStylist' => \Libs\Plugins\FileStorage\Stylist\SquareStylist::class
             ]
         ]);
     }

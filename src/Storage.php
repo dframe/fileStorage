@@ -33,7 +33,8 @@ class Storage
 
     }
 
-    public function settings($settings){
+    public function settings($settings)
+    {
         $this->settings['stylists'] = $settings['stylists'];
     }
 
