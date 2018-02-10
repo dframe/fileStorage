@@ -17,6 +17,8 @@ File system which allow you to store and style images
  * Image stylist
  * Storage files and information
  
-[Example #1](https://github.com/dframe/fileStorage/tree/master/examples/example1) For DframeFramework
+## Examples
 
-[Example #2](https://github.com/dframe/fileStorage/tree/master/examples/example2) Stalone Code PHP 
+For DframeFramework [Example #1](https://github.com/dframe/fileStorage/tree/master/examples/example1) 
+
+Stalone Image Stylist Code PHP [Example #2](https://github.com/dframe/fileStorage/tree/master/examples/example2) 
