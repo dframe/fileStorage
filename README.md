@@ -7,7 +7,7 @@ File system which allow you to store and style images
 
 ## Preview
 
-[![preview](https://github.com/dframe/fileStorage/blob/master/preview.jpg)(https://github.com/dframe/fileStorage/blob/master/preview.jpg)
+![preview](https://github.com/dframe/fileStorage/blob/master/preview.jpg)(https://github.com/dframe/fileStorage/blob/master/preview.jpg)
 
 
 #### Installation
