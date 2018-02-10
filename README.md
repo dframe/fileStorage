@@ -19,7 +19,10 @@ File system which allow you to store and style images
 ## What's included?
  * Image stylist
  * Storage files and information
- 
+
+# Feature
+ * Text on images
+
 ## Examples
 
 For DframeFramework [Example #1](https://github.com/dframe/fileStorage/tree/master/examples/example1) 
