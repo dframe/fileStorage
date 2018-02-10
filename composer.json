@@ -5,7 +5,9 @@
     "keywords": ["filestorage", "filesystem"],
 	"license": "MIT",
     "require": {
-        "league/flysystem": "^1.0"
+        "league/flysystem": "^1.0",
+        "dframe/dframe": "dev-master",
+        "coldume/imagecraft": "^1.0"
     },
     "suggest": {
         "coldume/imagecraft": "^1.0"

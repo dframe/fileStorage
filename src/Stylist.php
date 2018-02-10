@@ -20,9 +20,10 @@ abstract class Stylist
      * Pobiera oryginal i zwraca w przetworzonej formie. Dane wejsciowe to reource obrazu dla biblioteki
      * PHP GD, a wyjscie to resource z przetworzonym obrazem
      *
-     * @param  layer
-     * @param  array
-     * @return object
+     * @param $originStream stream
+     * @param $extension string
+     * @param $stylistObj object
+     * @param $stylistParam array
      */
     abstract public function stylize($originStream, $extension, $stylistObj, $stylistParam);
     

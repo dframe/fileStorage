@@ -1,1 +1,4 @@
 .project
+vendor
+examples/example2/cache/*
+!examples/example2/cache/.gitkeep

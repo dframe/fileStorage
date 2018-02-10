@@ -1,7 +1,8 @@
 <?php
 namespace Dframe\FileStorage\Stylist;
 use Imagecraft\ImageBuilder;
-/*
+
+/**
  * Prosty stylista
  * Zwraca obrazek taki jakim jest
  */
