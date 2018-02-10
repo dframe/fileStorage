@@ -5,6 +5,9 @@ Dframe/FileStorage
 
 File system which allow you to store and style images
 
+## Preview
+[![preview](https://github.com/dframe/fileStorage/blob/master/preview.jpg)](https://github.com/dframe/fileStorage/blob/master/preview.jpg)
+
 #### Installation
 
     composer require dframe/filestorage
@@ -22,3 +25,4 @@ File system which allow you to store and style images
 For DframeFramework [Example #1](https://github.com/dframe/fileStorage/tree/master/examples/example1) 
 
 Stalone Image Stylist Code PHP [Example #2](https://github.com/dframe/fileStorage/tree/master/examples/example2) 
+
