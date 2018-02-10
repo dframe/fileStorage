@@ -14,7 +14,7 @@ File system which allow you to store and style images
 
 ----------
 
-**Documentation available at** http://dframeframework.com/pl/docs/fileStorage,configure
+**Documentation available at** http://dframeframework.com/pl/docs/fileStorage,usage
 
 ## What's included?
  * Image stylist
