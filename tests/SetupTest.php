@@ -1,7 +1,8 @@
 <?php
-use PHPUnit_Framework_Constraint_IsType as PHPUnit_IsType;
-use \Dframe\Database\WhereStringChunk;
+namespace Dframe\tests;
+ini_set('session.use_cookies', 0);
 
+use PHPUnit_Framework_Constraint_IsType as PHPUnit_IsType;
 
 // backward compatibility
 if (!class_exists('\PHPUnit\Framework\TestCase') AND class_exists('\PHPUnit_Framework_TestCase')) {
