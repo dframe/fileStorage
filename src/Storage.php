@@ -11,7 +11,7 @@ use Dframe\Router\Response;
 class Storage
 {
 
-    public function __construct($driver = false)
+    public function __construct($driver = null)
     {
         $this->driver = $driver;
 

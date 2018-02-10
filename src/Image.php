@@ -40,76 +40,6 @@ class Image
         return $this;
     }
 
-    private function _displayDefault()
-    {
-        $orginalImage = $this->defaultImage;
-
-        $output = array();
-        $output['stylist'] = $this->stylist;
-        $output['size'] = $this->size;
-
-        $ext = substr($orginalImage, strrpos($orginalImage, "."));
-    
-        $path = $output['stylist'];
-        if (isset($output['size']) AND !empty($output['size'])) {
-        }
-        
-        $path .= '-'.$this->size;
-        $cache = basename($orginalImage, $ext).'-'.$path.'-'.md5('+'.$path.'+'.$orginalImage.'+').$ext;
-        $cache = str_replace(basename($orginalImage, $ext).$ext, $cache, $orginalImage);
-
-        $cacheAdapter = 'cache://'.$cache;
-        $sourceAdapter = 'web://'.$orginalImage;
-
-        $has = $this->manager->has($cacheAdapter);
-        if ($has == false OR ($has == true AND $this->manager->getTimestamp($cacheAdapter) < strtotime("-".$this->cache['life']." seconds"))) {
-
-            if ($has == true) { // zrobić update zamiast delete 
-                $this->manager->delete($cacheAdapter);
-            }
-
-            if ($this->manager->has($sourceAdapter)) {
-                $mimetype = $this->manager->getMimetype($sourceAdapter);
-                if (!empty($output)) {
-
-                    $getStylist = $this->getStylist($output['stylist']);
-                    $readStream = $this->manager->readStream($sourceAdapter);
-                    $putStream = $getStylist->stylize($readStream, null, $getStylist, $output);
-
-                } else{
-                    // Retrieve a read-stream
-                    $stream = $this->manager->readStream($sourceAdapter);
-                    $contents = stream_get_contents($stream);
-                    fclose($stream);
-                    
-                    // Create or overwrite using a stream.
-                    $putStream = tmpfile();
-                    fwrite($putStream, $contents);
-                    rewind($putStream);
-                }
-
-                $this->manager->putStream($cacheAdapter, $putStream);
-
-                if (!empty($this->storage->driver)) {
-                    $this->storage->driver->cache('web', $orginalImage, $cache, $mimetype);
-                }
-                
-                if (is_resource($putStream)) {
-                    fclose($putStream);
-                }
-        
-            } 
-        }
-
-
-        $this->cache = $cache;
-
-        return array(
-            'cache' => $cache
-        );
-
-    }
-
     public function display($adapter = 'local')
     {
         $get = $this->cache($adapter, $this->orginalImage);
@@ -119,13 +49,14 @@ class Image
 
     public function get($adapter = 'local')
     {
-        $get = $this->cache($adapter, $this->orginalImage);
-
-        $data = $this->storage->driver->get($adapter, $this->orginalImage, $get['cache'], $mimetype, $readStream);
+        $data = $this->cache($adapter, $this->orginalImage);
+        if(!empty($this->storage->driver)){
+            $data = $this->storage->driver->get($adapter, $this->orginalImage, $get['cache'], $mimetype, $readStream);
+        }
         return $data;
     }
 
-    public function cache($adapter, $orginalImage)
+    public function cache($adapter, $orginalImage, $default = false)
     {
 
         $output = array();
@@ -171,7 +102,9 @@ class Image
                 }
 
                 if (!empty($this->storage)) {
-                    $this->storage->driver->cache($adapter, $orginalImage, $cache, $mimetype, $readStream);
+                    if(!empty($this->storage->driver)){
+                        $this->storage->driver->cache($adapter, $orginalImage, $cache, $mimetype, $readStream);
+                    }
                     $this->manager->putStream($cacheAdapter, $readStream);
        
                 } else {
@@ -179,16 +112,20 @@ class Image
                 }
 
             } elseif (!empty($this->defaultImage)) {
-                $get = $this->storage->driver->get($adapter, $orginalImage, true);
-                if ($get['return'] == true) {
-                    foreach ($get['cache'] as $key => $value) {
-                        if ($this->manager->has('cache://'.$value['file_cache_path'])) {
-                            $this->manager->delete('cache://'.$value['file_cache_path']);
+                if(!empty($this->storage->driver)){
+                    $get = $this->storage->driver->get($adapter, $orginalImage, true);
+                    if ($get['return'] == true) {
+                        foreach ($get['cache'] as $key => $value) {
+                            if ($this->manager->has('cache://'.$value['file_cache_path'])) {
+                                $this->manager->delete('cache://'.$value['file_cache_path']);
+                            }
                         }
+                        //$this->storage->driver->drop($orginalImage);
                     }
-                    //$this->storage->driver->drop($orginalImage);
                 }
-                return $this->_displayDefault(); //zwracać bład
+                if($default == false){
+                    return $this->cache($adapter, $this->defaultImage, true); //zwracać bład
+                }
                 
             } 
         }
@@ -237,6 +174,7 @@ class Image
      */
     protected function getStylist($stylist = 'orginal')
     {
+
         $className = $this->stylists[$stylist];
         if (!class_exists($className) OR !method_exists($className, 'stylize')) {
             throw new \Exception('Requested stylist "'.$stylist.'" was not found or is incorrect');
