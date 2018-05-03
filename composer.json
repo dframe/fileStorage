@@ -3,7 +3,7 @@
     "description": "File system storage with cache",
     "type": "library",
     "keywords": ["filestorage", "filesystem", "dframe", "stylist"],
-	"license": "MIT",
+    "license": "MIT",
     "require": {
         "league/flysystem": "^1.0",
         "dframe/dframe": "dev-master",
