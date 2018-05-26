@@ -15,7 +15,7 @@ namespace Dframe\FileStorage;
 
 abstract class Stylist
 {
-    
+
     /**
      * Pobiera oryginal i zwraca w przetworzonej formie. Dane wejsciowe to reource obrazu dla biblioteki
      * PHP GD, a wyjscie to resource z przetworzonym obrazem
@@ -26,7 +26,7 @@ abstract class Stylist
      * @param $stylistParam array
      */
     abstract public function stylize($originStream, $extension, $stylistObj, $stylistParam);
-    
+
     /**
      * Zwraca unikalna nazwe stylisty, takze w zaleznosci od parametrow
      *
@@ -34,5 +34,5 @@ abstract class Stylist
      * @return string
      */
     abstract public function identify($stylistParam);
-    
+
 }

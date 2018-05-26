@@ -12,7 +12,7 @@ interface DatabaseDriverInterface
 {
 
     public function get($adapter, $path);
-    
+
     public function put($adapter, $path, $mine, $stream);
 
     public function cache($adapter, $orginalId, $path, $mine, $stream);

@@ -1,5 +1,6 @@
 <?php
 namespace Dframe\FileStorage;
+
 use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\View;
@@ -28,7 +29,7 @@ class Storage
     public function image($image, $default = false)
     {
         $image = new Image($image, $default, $this);
-        $image->addStylist($this->settings['stylists']); 
+        $image->addStylist($this->settings['stylists']);
         return $image;
 
     }
@@ -42,19 +43,19 @@ class Storage
     public function getFile($file)
     {
 
-        $sourceAdapter = 'local://'.$file;
+        $sourceAdapter = 'local://' . $file;
         if ($this->manager->has($sourceAdapter)) {
 
             // Retrieve a read-stream
             $stream = $this->manager->readStream($sourceAdapter);
             $contents = stream_get_contents($stream);
             fclose($stream);
-                 
+
         } else {
             return false;
         }
 
-        return $this->router->makeUrl('filestorage/file').'?file='.$file;
+        return $this->router->makeUrl('filestorage/file') . '?file=' . $file;
     }
 
 
@@ -62,13 +63,13 @@ class Storage
     {
 
 
-        $fileAdapter = $adapter.'://'.$file;
+        $fileAdapter = $adapter . '://' . $file;
         // Retrieve a read-stream
         if (!$this->manager->has($fileAdapter)) {
 
-            $body = "<h1>404 Not Found</h1> \n\r".
-                    "The page that you have requested could not be found.";
-            
+            $body = "<h1>404 Not Found</h1> \n\r" .
+                "The page that you have requested could not be found.";
+
             return Response::render($body)->status(404);
         }
 
@@ -76,7 +77,7 @@ class Storage
         $stream = $this->manager->readStream($fileAdapter);
         $contents = stream_get_contents($stream);
         fclose($stream);
-        
+
         return Response::render($contents)->headers(array('Content-type' => $getMimetype));
 
     }
@@ -87,24 +88,24 @@ class Storage
         if ($get['return'] == true) {
             if (!empty($get['cache'])) {
                 foreach ($get['cache'] as $key => $value) {
-                    if ($this->manager->has($adapter.'://'.$value['file_cache_path'])) {
-                        $this->manager->delete($adapter.'://'.$value['file_cache_path']);
+                    if ($this->manager->has($adapter . '://' . $value['file_cache_path'])) {
+                        $this->manager->delete($adapter . '://' . $value['file_cache_path']);
                     }
                 }
             }
 
-            if ($this->manager->has($adapter.'://'.$get['file_path'])) {
-                $this->manager->delete($adapter.'://'.$get['file_path']);
+            if ($this->manager->has($adapter . '://' . $get['file_path'])) {
+                $this->manager->delete($adapter . '://' . $get['file_path']);
             }
 
             $drop = $this->driver->drop($adapter, $file);
             if ($drop['return'] != true) {
                 return array('return' => false, 'response' => $drop['response']);
             }
-                
+
             return array('return' => true, 'response' => 'Pomyślnie usunięto');
         }
-        
+
         return array('return' => false, 'response' => 'Brak pliku');
     }
 
@@ -118,24 +119,24 @@ class Storage
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime = finfo_file($finfo, $tmp_name);
             finfo_close($finfo);
-    
-            if ($this->manager->has($adapter.'://'.$pathImage)) {
+
+            if ($this->manager->has($adapter . '://' . $pathImage)) {
                 if ($forced == false) {
                     throw new Exception('File Allredy Exist');
                 }
-                
-                $this->manager->delete($adapter.'://'.$pathImage);
+
+                $this->manager->delete($adapter . '://' . $pathImage);
             }
-            
+
             $stream = fopen($tmp_name, 'r+');
             if (!$stream) {
                 throw new Exception('Failed to open uploaded file');
             }
 
-            $this->manager->writeStream($adapter.'://'.$pathImage, $stream);
+            $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
             $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
             fclose($stream);
-            
+
         } catch (Exception $e) {
             return array('return' => false, 'response' => $e->getMessage());
         }
@@ -144,12 +145,12 @@ class Storage
         if ($put['return'] != false) {
             return array('return' => true, 'fileId' => $put['lastInsertId']);
         } else {
-            $get = $this->driver->get($adapter.'local', $pathImage);
+            $get = $this->driver->get($adapter . 'local', $pathImage);
             return array('return' => true, 'fileId' => $get['file_id']);
         }
 
 
         return array('return' => false, 'response' => 'Bład');
     }
-    
+
 }

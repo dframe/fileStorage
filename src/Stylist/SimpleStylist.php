@@ -1,5 +1,6 @@
 <?php
 namespace Dframe\FileStorage\Stylist;
+
 use Imagecraft\ImageBuilder;
 
 /**
@@ -19,11 +20,11 @@ class SimpleStylist extends \Dframe\FileStorage\Stylist
         $layer = $builder->addBackgroundLayer();
         $contents = stream_get_contents($originStream);
         $layer->contents($contents);
-        
+
         fclose($originStream);
-        
+
         $image = $builder->save();
-        
+
         $tmpFile = tmpfile();
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
