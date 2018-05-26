@@ -2,8 +2,9 @@
     "name": "dframe/filestorage",
     "description": "File system storage with cache",
     "type": "library",
-    "keywords": ["filestorage", "filesystem"],
-	"license": "MIT",
+    "keywords": ["filestorage", "filesystem", "dframe", "stylist"],
+    "homepage": "https://dframeframework.com",
+    "license": "MIT",
     "require": {
         "league/flysystem": "^1.0",
         "dframe/dframe": "dev-master",
@@ -14,7 +15,7 @@
     },
     "authors": [
         {
-            "name": "Slawek Kaleta",
+            "name": "Sławomir Kaleta",
             "email": "slaszka@gmail.com"
         }
     ],
