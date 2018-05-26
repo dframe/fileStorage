@@ -20,21 +20,20 @@ class SquareStylist extends \Dframe\FileStorage\Stylist
         $layer = $builder->addBackgroundLayer();
         $contents = stream_get_contents($originStream);
         $layer->contents($contents);
-        
-        
+
+
         if (isset($stylistParam['size'])) {
             $size = $stylistParam['size'];
-        }
-        else{
+        } else {
             $size = '100';
         }
-        
+
         $layer->resize($size, $size, 'fill_crop');
-        
+
         fclose($originStream);
-        
+
         $image = $builder->save();
-        
+
         $tmpFile = tmpfile();
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
@@ -51,12 +50,11 @@ class SquareStylist extends \Dframe\FileStorage\Stylist
     {
         if (isset($stylistParam['size'])) {
             $size = $stylistParam['size'];
-        }
-        else{
+        } else {
             $size = '100';
         }
 
-        return 'SquareStylist-'.$size;
+        return 'SquareStylist-' . $size;
     }
 
 

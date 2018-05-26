@@ -6,41 +6,50 @@ use League\Flysystem\Cached\Storage\Memory as CacheStore;
 
 
 $localAdapter = new Local(
-    dirname(__DIR__).'/../app/View/uploads', LOCK_EX, Local::DISALLOW_LINKS, [
-    'file' => [
-        'public' => 0744,
-        'private' => 0700,
-    ],
-    'dir' => [
-        'public' => 0755,
-        'private' => 0700,
-    ]
+    dirname(__DIR__) . '/../app/View/uploads',
+    LOCK_EX,
+    Local::DISALLOW_LINKS,
+    [
+        'file' => [
+            'public' => 0744,
+            'private' => 0700,
+        ],
+        'dir' => [
+            'public' => 0755,
+            'private' => 0700,
+        ]
     ]
 );
 
 $webAdapter = new Local(
-    dirname(__DIR__).'/../web', LOCK_EX, Local::DISALLOW_LINKS, [
-    'file' => [
-        'public' => 0744,
-        'private' => 0700,
-    ],
-    'dir' => [
-        'public' => 0755,
-        'private' => 0700,
-    ]
+    dirname(__DIR__) . '/../web',
+    LOCK_EX,
+    Local::DISALLOW_LINKS,
+    [
+        'file' => [
+            'public' => 0744,
+            'private' => 0700,
+        ],
+        'dir' => [
+            'public' => 0755,
+            'private' => 0700,
+        ]
     ]
 );
 
 $cacheAdapter = new Local(
-    dirname(__DIR__).'/../app/View/cache', LOCK_EX, Local::DISALLOW_LINKS, [
-    'file' => [
-        'public' => 0744,
-        'private' => 0700,
-    ],
-    'dir' => [
-        'public' => 0755,
-        'private' => 0700,
-    ]
+    dirname(__DIR__) . '/../app/View/cache',
+    LOCK_EX,
+    Local::DISALLOW_LINKS,
+    [
+        'file' => [
+            'public' => 0744,
+            'private' => 0700,
+        ],
+        'dir' => [
+            'public' => 0755,
+            'private' => 0700,
+        ]
     ]
 );
         
@@ -56,12 +65,12 @@ $local = new Filesystem($localAdapter);
 $web = new Filesystem($webAdapter);
 
 return array(
-    'pluginsDir' => dirname(__DIR__).'/'
+    'pluginsDir' => dirname(__DIR__) . '/',
     'adapters' => array(
         'local' => $local,
         'cache' => $cacheFilesystem,
         'web' => $web
-        ),
+    ),
     'cache' => array(
         'life' => 600 // in seconds
     )

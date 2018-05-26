@@ -7,7 +7,7 @@ namespace Libs\Plugins\FileStorage;
 
 class MetadataFile
 {
-    
+
     public function __construct($mime, $stream)
     {
         
@@ -15,7 +15,7 @@ class MetadataFile
         //fwrite($putStream, stream_get_contents($readStream));
         //rewind($putStream);
         //fclose($putStream);
-        
+
     }
 
     public function get($metadata = false)
@@ -26,6 +26,6 @@ class MetadataFile
         }
 
         return 'Example #2';
-        
+
     }
 }

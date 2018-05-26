@@ -30,11 +30,11 @@ class RectStylist extends \Dframe\FileStorage\Stylist
         }
 
         $layer->resize($stylistParam['w'], $stylistParam['h'], 'fill_crop');
-        
+
         fclose($originStream);
-        
+
         $image = $builder->save();
-        
+
         $tmpFile = tmpfile();
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
@@ -49,7 +49,7 @@ class RectStylist extends \Dframe\FileStorage\Stylist
 
     public function identify($stylistParam)
     {
-        return 'RectStylist-'.$stylistParam['size'];
+        return 'RectStylist-' . $stylistParam['size'];
     }
 
 
