@@ -7,7 +7,7 @@
     "license": "MIT",
     "require": {
         "league/flysystem": "^1.0",
-        "dframe/dframe": "dev-master",
+        "dframe/dframe": ">3.27",
         "coldume/imagecraft": "^1.0"
     },
     "suggest": {
