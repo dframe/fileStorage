@@ -2,7 +2,12 @@
     "name": "dframe/filestorage",
     "description": "File system storage with cache",
     "type": "library",
-    "keywords": ["filestorage", "filesystem", "dframe", "stylist"],
+    "keywords": [
+        "filestorage",
+        "filesystem",
+        "dframe",
+        "stylist"
+    ],
     "homepage": "https://dframeframework.com",
     "license": "MIT",
     "require": {
@@ -20,7 +25,9 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Dframe\\FileStorage\\": "src/" }
+        "psr-4": {
+            "Dframe\\FileStorage\\": "src/"
+        }
     },
     "scripts": {
         "test": [
