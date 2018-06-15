@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * Dframe/FileStorage
+ * Copyright (c) Sławomir Kaleta
+ *
+ * @license https://github.com/dframe/fileStorage/blob/master/LICENSE (MIT)
+ */
+
 namespace Dframe\FileStorage;
 
 use League\Flysystem\MountManager;
@@ -6,6 +14,11 @@ use Dframe\Config;
 use Dframe\View;
 use Dframe\Router;
 
+/**
+ * Image Class
+ * 
+ * @author Sławomir Kaleta <slaszka@gmail.com>
+ */
 class Image
 {
 

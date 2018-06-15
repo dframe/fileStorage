@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * Dframe/FileStorage
+ * Copyright (c) Sławomir Kaleta
+ *
+ * @license https://github.com/dframe/fileStorage/blob/master/LICENSE (MIT)
+ */
+
 namespace Dframe\FileStorage\Stylist;
 
 use Imagecraft\ImageBuilder;
@@ -6,6 +14,8 @@ use Imagecraft\ImageBuilder;
 /**
  * Prosty stylista
  * Zwraca obrazek taki jakim jest
+ * 
+ * @author Sławomir Kaleta <slaszka@gmail.com>
  */
 
 class SimpleStylist extends \Dframe\FileStorage\Stylist

@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * Dframe/FileStorage
+ * Copyright (c) Sławomir Kaleta
+ *
+ * @license https://github.com/dframe/fileStorage/blob/master/LICENSE (MIT)
+ */
+
 namespace Dframe\FileStorage;
 
 /** 
@@ -11,6 +19,8 @@ namespace Dframe\FileStorage;
  * w formie ciagu bajtow i zwraca go po przetworzeniu, tez w formie ciagu bajtow
  * 
  * Podklasy stylistow powinny znajdowac sie w folderze stylists
+ * 
+ * @author Sławomir Kaleta <slaszka@gmail.com>
  */
 
 abstract class Stylist
