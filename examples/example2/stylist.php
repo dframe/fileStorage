@@ -3,8 +3,8 @@ use Dframe\FileStorage\Storage;
 
 error_reporting(E_ALL);          # Debug settings
 ini_set("display_errors", "off"); # Debug settings
-    
-define("APP_DIR", dirname(__FILE__).'/');
+
+define("APP_DIR", dirname(__FILE__) . '/');
 include_once '../../vendor/autoload.php';
 include "Stylists/OrginalStylist.php";
 include "Stylists/RectStylist.php";
@@ -32,4 +32,5 @@ $images[] = array('size' => 'Orginal', 'img' => $Storage->image('picture1.jpg')-
 <?php foreach ($images as $key => $image) { ?>
     Size: <?php echo $image['size']; ?>;<br>
 	<img src="cache/<?php echo $image['img']['cache']; ?>"><hr>
-<?php } ?>
+<?php 
+} ?>
