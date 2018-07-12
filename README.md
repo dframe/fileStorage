@@ -25,7 +25,7 @@ Simple usage
     $Storage->drop('local', 'upload/picture1.jpg');
 ```
 
-**Documentation available at** http://dframeframework.com/pl/docs/master/fileStorage,usage
+**Documentation available at** https://dframeframework.com/en/docs/fileStorage/master/configuration
 
 ## What's included?
  * Image stylist
