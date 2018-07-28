@@ -10,11 +10,8 @@ use Imagecraft\ImageBuilder;
 
 class RectStylist extends \Dframe\FileStorage\Stylist
 {
-
-
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
-
         echo 'tes';
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
@@ -44,14 +41,10 @@ class RectStylist extends \Dframe\FileStorage\Stylist
 
         rewind($tmpFile);
         return $tmpFile;
-
     }
 
     public function identify($stylistParam)
     {
         return 'RectStylist-' . $stylistParam['size'];
     }
-
-
-
 }

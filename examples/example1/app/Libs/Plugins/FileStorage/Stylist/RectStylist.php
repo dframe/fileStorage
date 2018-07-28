@@ -1,5 +1,6 @@
 <?php
 namespace Libs\Plugins\FileStorage\Stylist;
+
 use Imagecraft\ImageBuilder;
 
 /*
@@ -11,11 +12,8 @@ use Imagecraft\ImageBuilder;
 
 class RectStylist extends \Dframe\FileStorage\Stylist
 {
-
-
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
-
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
 
@@ -37,15 +35,10 @@ class RectStylist extends \Dframe\FileStorage\Stylist
 
         rewind($tmpFile);
         return $tmpFile;
-
     }
 
     public function identify($stylistParam)
     {
-
         return 'rectStylist-'.$stylistParam['w'].'-'.$stylistParam['h'];
     }
-
-
-
 }

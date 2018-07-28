@@ -1,17 +1,16 @@
 <?php
 namespace Libs\Plugins\FileStorage\Stylist;
+
 use Imagecraft\ImageBuilder;
 
 /*
- * Stylizer real 
+ * Stylizer real
  */
 
 class RealStylist extends \Dframe\FileStorage\Stylist
 {
-
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
-
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
 
@@ -41,7 +40,6 @@ class RealStylist extends \Dframe\FileStorage\Stylist
 
         rewind($tmpFile);
         return $tmpFile;
-
     }
 
     public function identify($stylistParam)

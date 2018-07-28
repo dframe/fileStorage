@@ -1,5 +1,6 @@
 <?php
 use Imagecraft\ImageBuilder;
+
 /*
  * Prosty stylista
  * Zwraca obrazek taki jakim jest
@@ -7,10 +8,8 @@ use Imagecraft\ImageBuilder;
 
 class OrginalStylist extends \Dframe\FileStorage\Stylist
 {
-
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
-
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
 
@@ -31,12 +30,10 @@ class OrginalStylist extends \Dframe\FileStorage\Stylist
 
         rewind($tmpFile);
         return $tmpFile;
-
     }
 
     public function identify($stylistParam)
     {
         return 'originalStylist';
     }
-
 }
