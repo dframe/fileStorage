@@ -11,20 +11,17 @@ namespace Dframe\FileStorage;
 
 use League\Flysystem\MountManager;
 use Dframe\Config;
-use Dframe\View;
 use Dframe\Router;
-use Dframe\FileStorage\Image;
 use Dframe\Router\Response;
 
 /**
  * Storage Class
- * 
+ *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
 
 class Storage
 {
-
     public function __construct($driver = null)
     {
         $this->driver = $driver;
@@ -33,10 +30,9 @@ class Storage
         //$configFileStorage = Config::load('config', 'app/Libs/Plugins/fileStorage');
         $configFileStorage = Config::load('fileStorage');
 
-        $adapters = $configFileStorage->get('adapters', array());
+        $adapters = $configFileStorage->get('adapters', []);
         $this->manager = new MountManager($adapters);
         $this->router = new Router();
-
     }
 
     public function image($image, $default = false)
@@ -44,7 +40,6 @@ class Storage
         $image = new Image($image, $default, $this);
         $image->addStylist($this->settings['stylists']);
         return $image;
-
     }
 
     public function settings($settings)
@@ -55,7 +50,6 @@ class Storage
 
     public function getFile($file)
     {
-
         $sourceAdapter = 'local://' . $file;
         if ($this->manager->has($sourceAdapter)) {
 
@@ -63,7 +57,6 @@ class Storage
             $stream = $this->manager->readStream($sourceAdapter);
             $contents = stream_get_contents($stream);
             fclose($stream);
-
         } else {
             return false;
         }
@@ -74,12 +67,9 @@ class Storage
 
     public function renderFile($file, $adapter = 'local')
     {
-
-
         $fileAdapter = $adapter . '://' . $file;
         // Retrieve a read-stream
         if (!$this->manager->has($fileAdapter)) {
-
             $body = "<h1>404 Not Found</h1> \n\r" .
                 "The page that you have requested could not be found.";
 
@@ -91,8 +81,7 @@ class Storage
         $contents = stream_get_contents($stream);
         fclose($stream);
 
-        return Response::render($contents)->headers(array('Content-type' => $getMimetype));
-
+        return Response::render($contents)->headers(['Content-type' => $getMimetype]);
     }
 
     public function drop($adapter, $file)
@@ -113,22 +102,19 @@ class Storage
 
             $drop = $this->driver->drop($adapter, $file);
             if ($drop['return'] != true) {
-                return array('return' => false, 'response' => $drop['response']);
+                return ['return' => false, 'response' => $drop['response']];
             }
 
-            return array('return' => true, 'response' => 'Pomyślnie usunięto');
+            return ['return' => true, 'response' => 'Pomyślnie usunięto'];
         }
 
-        return array('return' => false, 'response' => 'Brak pliku');
+        return ['return' => false, 'response' => 'Brak pliku'];
     }
 
 
     public function put($adapter, $tmp_name, $pathImage, $forced = false)
     {
-
         try {
-
-
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime = finfo_file($finfo, $tmp_name);
             finfo_close($finfo);
@@ -149,21 +135,19 @@ class Storage
             $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
             $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
             fclose($stream);
-
         } catch (Exception $e) {
-            return array('return' => false, 'response' => $e->getMessage());
+            return ['return' => false, 'response' => $e->getMessage()];
         }
 
 
         if ($put['return'] != false) {
-            return array('return' => true, 'fileId' => $put['lastInsertId']);
+            return ['return' => true, 'fileId' => $put['lastInsertId']];
         } else {
             $get = $this->driver->get($adapter . 'local', $pathImage);
-            return array('return' => true, 'fileId' => $get['file_id']);
+            return ['return' => true, 'fileId' => $get['file_id']];
         }
 
 
-        return array('return' => false, 'response' => 'Bład');
+        return ['return' => false, 'response' => 'Bład'];
     }
-
 }

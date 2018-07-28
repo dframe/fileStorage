@@ -1,8 +1,6 @@
 <?php
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
-use League\Flysystem\Cached\CachedAdapter;
-use League\Flysystem\Cached\Storage\Memory as CacheStore;
 
 $localAdapter = new Local(
     dirname(__DIR__) . '/uploads',
@@ -57,11 +55,11 @@ $cache = new Filesystem($cacheAdapter);
 $local = new Filesystem($localAdapter);
 $web = new Filesystem($webAdapter);
 
-return array(
+return [
     'pluginsDir' => dirname(__DIR__) . '/',
-    'adapters' => array(
+    'adapters' => [
         'local' => $local,
         'cache' => $cache,
         'web' => $web
-    )
-);
+    ]
+];

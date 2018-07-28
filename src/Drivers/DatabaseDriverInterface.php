@@ -14,13 +14,12 @@ namespace Dframe\FileStorage\Drivers;
  *
  * Drivers can both be persistent or static depending on their implementation.
  * A default, static ArrayDriver implementation comes with this package.
- * 
+ *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
 
 interface DatabaseDriverInterface
 {
-
     public function get($adapter, $path);
 
     public function put($adapter, $path, $mine, $stream);
@@ -28,5 +27,4 @@ interface DatabaseDriverInterface
     public function cache($adapter, $orginalId, $path, $mine, $stream);
 
     public function drop($adapter, $path);
-
 }

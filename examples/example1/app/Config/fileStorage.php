@@ -4,7 +4,6 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\Cached\Storage\Memory as CacheStore;
 
-
 $localAdapter = new Local(
     dirname(__DIR__) . '/../app/View/uploads',
     LOCK_EX,
@@ -64,14 +63,14 @@ $cacheFilesystem = new Filesystem($adapter);
 $local = new Filesystem($localAdapter);
 $web = new Filesystem($webAdapter);
 
-return array(
+return [
     'pluginsDir' => dirname(__DIR__) . '/',
-    'adapters' => array(
+    'adapters' => [
         'local' => $local,
         'cache' => $cacheFilesystem,
         'web' => $web
-    ),
-    'cache' => array(
+    ],
+    'cache' => [
         'life' => 600 // in seconds
-    )
-);
+    ]
+];

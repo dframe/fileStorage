@@ -9,17 +9,17 @@
 
 namespace Dframe\FileStorage;
 
-/** 
+/**
  * Klasa abstrakcyjna stylisty
- * 
+ *
  * Stylista to obiekt, ktory przetwarza obraz wedlug okreslonego schematu
  * (np. przycina, wyszarza, zmniejsza itp.)
- * 
+ *
  * Kazdy stylista powinien miec metode stylize($image), ktora pobiera oryginal
  * w formie ciagu bajtow i zwraca go po przetworzeniu, tez w formie ciagu bajtow
- * 
+ *
  * Podklasy stylistow powinny znajdowac sie w folderze stylists
- * 
+ *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
 
@@ -44,5 +44,4 @@ abstract class Stylist
      * @return string
      */
     abstract public function identify($stylistParam);
-
 }

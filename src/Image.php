@@ -11,36 +11,33 @@ namespace Dframe\FileStorage;
 
 use League\Flysystem\MountManager;
 use Dframe\Config;
-use Dframe\View;
 use Dframe\Router;
 
 /**
  * Image Class
- * 
+ *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
 
 class Image
 {
-
     public $stylist = 'orginal';
-    public $stylists = array(
+    public $stylists = [
         'orginal' => \Dframe\Dframe\FileStorage\Stylist\SimpleStylist::class
-    );
+    ];
     public $size;
 
     public function __construct($image, $default = false, $storage)
     {
         $configFileStorage = Config::load('fileStorage');
 
-        $adapters = $configFileStorage->get('adapters', array());
-        $this->cache = $configFileStorage->get('cache', array('life' => 600));
+        $adapters = $configFileStorage->get('adapters', []);
+        $this->cache = $configFileStorage->get('cache', ['life' => 600]);
         $this->manager = new MountManager($adapters);
         $this->router = new Router();
         $this->orginalImage = $image;
         $this->defaultImage = $default;
         $this->storage = $storage;
-
     }
 
     public function stylist($stylist = false)
@@ -59,7 +56,6 @@ class Image
     {
         $get = $this->cache($adapter, $this->orginalImage);
         return $this->router->makeUrl('filestorage/images/:params?params=' . $get['cache']);
-
     }
 
     public function get($adapter = 'local')
@@ -73,8 +69,7 @@ class Image
 
     public function cache($adapter, $orginalImage, $default = false)
     {
-
-        $output = array();
+        $output = [];
         $output['stylist'] = $this->stylist;
         $output['size'] = $this->size;
 
@@ -86,7 +81,7 @@ class Image
             $stylist .= '-' . $this->size;
         }
 
-        $cachePath = array();
+        $cachePath = [];
         $cachePath[0] = substr(md5($orginalImage), 0, 6);
         $cachePath[1] = substr(md5($orginalImage), 6, 6);
         $cachePath[2] = substr(md5($stylist . '+' . $orginalImage), 0, 6);
@@ -101,8 +96,7 @@ class Image
 
         $has = $this->manager->has($cacheAdapter);
         if ($has == false or ($has == true and $this->manager->getTimestamp($cacheAdapter) < strtotime("-" . $this->cache['life'] . " seconds"))) {
-
-            if ($has == true) { // zrobić update zamiast delete 
+            if ($has == true) { // zrobić update zamiast delete
                 $this->manager->delete($cacheAdapter);
             }
 
@@ -121,11 +115,9 @@ class Image
                         $this->storage->driver->cache($adapter, $orginalImage, $cache, $mimetype, $readStream);
                     }
                     $this->manager->putStream($cacheAdapter, $readStream);
-
                 } else {
                     return false;
                 }
-
             } elseif (!empty($this->defaultImage)) {
                 if (!empty($this->storage->driver)) {
                     $get = $this->storage->driver->get($adapter, $orginalImage, true);
@@ -141,25 +133,22 @@ class Image
                 if ($default == false) {
                     return $this->cache($adapter, $this->defaultImage, true); //zwracać bład
                 }
-
             }
         }
 
         $this->cache = $cache;
 
-        return array(
+        return [
             'cache' => $cache
-        );
+        ];
     }
 
 
     public function renderFile($file, $adapter = 'local')
     {
-
         $fileAdapter = $adapter . '://' . $file;
         // Retrieve a read-stream
         if (!$this->manager->has($fileAdapter)) {
-
             $body = "<h1>404 Not Found</h1> \n\r" .
                 "The page that you have requested could not be found.";
 
@@ -171,7 +160,7 @@ class Image
         $contents = stream_get_contents($stream);
         fclose($stream);
 
-        return Response::render($contents)->header(array('Content-type' => $getMimetype));
+        return Response::render($contents)->header(['Content-type' => $getMimetype]);
     }
 
     public function addStylist($stylists)
@@ -189,14 +178,11 @@ class Image
      */
     protected function getStylist($stylist = 'orginal')
     {
-
         $className = $this->stylists[$stylist];
         if (!class_exists($className) or !method_exists($className, 'stylize')) {
             throw new \Exception('Requested stylist "' . $stylist . '" was not found or is incorrect');
         }
 
         return new $className();
-
     }
-
 }
