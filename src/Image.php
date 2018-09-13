@@ -9,24 +9,42 @@
 
 namespace Dframe\FileStorage;
 
-use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\Router;
+use Dframe\Router\Response;
+use League\Flysystem\MountManager;
 
 /**
  * Image Class
  *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
-
 class Image
 {
+    /**
+     * @var string
+     */
     public $stylist = 'orginal';
+
+    /**
+     * @var array
+     */
     public $stylists = [
         'orginal' => \Dframe\FileStorage\Stylist\SimpleStylist::class
     ];
+
+    /**
+     * @var
+     */
     public $size;
 
+    /**
+     * Image constructor.
+     *
+     * @param      $image
+     * @param bool $default
+     * @param      $storage
+     */
     public function __construct($image, $default = false, $storage)
     {
         $configFileStorage = Config::load('fileStorage');
@@ -40,33 +58,46 @@ class Image
         $this->storage = $storage;
     }
 
+    /**
+     * @param bool $stylist
+     *
+     * @return $this
+     */
     public function stylist($stylist = false)
     {
         $this->stylist = $stylist;
         return $this;
     }
 
+    /**
+     * @param $size
+     *
+     * @return $this
+     */
     public function size($size)
     {
         $this->size = $size;
         return $this;
     }
 
+    /**
+     * @param string $adapter
+     *
+     * @return string
+     */
     public function display($adapter = 'local')
     {
         $get = $this->cache($adapter, $this->orginalImage);
         return $this->router->makeUrl('filestorage/images/:params?params=' . $get['cache']);
     }
 
-    public function get($adapter = 'local')
-    {
-        $data = $this->cache($adapter, $this->orginalImage);
-        if (!empty($this->storage->driver)) {
-            $data = $this->storage->driver->get($adapter, $this->orginalImage, $get['cache'], $mimetype, $readStream);
-        }
-        return $data;
-    }
-
+    /**
+     * @param      $adapter
+     * @param      $orginalImage
+     * @param bool $default
+     *
+     * @return mixed
+     */
     public function cache($adapter, $orginalImage, $default = false)
     {
         $output = [];
@@ -143,7 +174,44 @@ class Image
         ];
     }
 
+    /**
+     * Zwraca obiekt stylisty o wskazanej nazwie
+     * Tylko do uzytku wewnatrz klasy!
+     *
+     * @param  string $stylist
+     *
+     * @return \Dframe\FileStorage\Stylist
+     */
+    protected function getStylist($stylist = 'orginal')
+    {
+        $className = $this->stylists[$stylist];
+        if (!class_exists($className) or !method_exists($className, 'stylize')) {
+            throw new \Exception('Requested stylist "' . $stylist . '" was not found or is incorrect');
+        }
 
+        return new $className();
+    }
+
+    /**
+     * @param string $adapter
+     *
+     * @return array
+     */
+    public function get($adapter = 'local')
+    {
+        $data = $this->cache($adapter, $this->orginalImage);
+        if (!empty($this->storage->driver)) {
+            $data = $this->storage->driver->get($adapter, $this->orginalImage, $get['cache'], $mimetype, $readStream);
+        }
+        return $data;
+    }
+
+    /**
+     * @param        $file
+     * @param string $adapter
+     *
+     * @return mixed
+     */
     public function renderFile($file, $adapter = 'local')
     {
         $fileAdapter = $adapter . '://' . $file;
@@ -160,29 +228,14 @@ class Image
         $contents = stream_get_contents($stream);
         fclose($stream);
 
-        return Response::render($contents)->header(['Content-type' => $getMimetype]);
+        return Response::render($contents)->headers(['Content-type' => $getMimetype]);
     }
 
+    /**
+     * @param $stylists
+     */
     public function addStylist($stylists)
     {
         $this->stylists = array_merge($this->stylists, $stylists);
-    }
-
-
-    /**
-     * Zwraca obiekt stylisty o wskazanej nazwie
-     * Tylko do uzytku wewnatrz klasy!
-     *
-     * @param  string $stylist
-     * @return Dframe/Libs/Stylist
-     */
-    protected function getStylist($stylist = 'orginal')
-    {
-        $className = $this->stylists[$stylist];
-        if (!class_exists($className) or !method_exists($className, 'stylize')) {
-            throw new \Exception('Requested stylist "' . $stylist . '" was not found or is incorrect');
-        }
-
-        return new $className();
     }
 }

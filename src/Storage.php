@@ -9,17 +9,16 @@
 
 namespace Dframe\FileStorage;
 
-use League\Flysystem\MountManager;
 use Dframe\Config;
 use Dframe\Router;
 use Dframe\Router\Response;
+use League\Flysystem\MountManager;
 
 /**
  * Storage Class
  *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
-
 class Storage
 {
     public function __construct($driver = null)

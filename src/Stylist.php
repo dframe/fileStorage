@@ -31,8 +31,8 @@ abstract class Stylist
      * PHP GD, a wyjscie to resource z przetworzonym obrazem
      *
      * @param $originStream stream
-     * @param $extension string
-     * @param $stylistObj object
+     * @param $extension    string
+     * @param $stylistObj   object
      * @param $stylistParam array
      */
     abstract public function stylize($originStream, $extension, $stylistObj, $stylistParam);
@@ -41,6 +41,7 @@ abstract class Stylist
      * Zwraca unikalna nazwe stylisty, takze w zaleznosci od parametrow
      *
      * @param  array
+     *
      * @return string
      */
     abstract public function identify($stylistParam);
