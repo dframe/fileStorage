@@ -21,6 +21,29 @@ use League\Flysystem\MountManager;
  */
 class Storage
 {
+    /**
+     * @var MountManager
+     */
+    protected $manager;
+    /**
+     * @var Router
+     */
+    protected $router;
+    /**
+     * @var null
+     */
+    protected $driver;
+
+    /**
+     * @var
+     */
+    protected $settings;
+
+    /**
+     * Storage constructor.
+     *
+     * @param \Dframe\FileStorage\Drivers\DatabaseDriverInterface $driver
+     */
     public function __construct($driver = null)
     {
         $this->driver = $driver;
@@ -34,6 +57,12 @@ class Storage
         $this->router = new Router();
     }
 
+    /**
+     * @param      $image
+     * @param bool $default
+     *
+     * @return Image
+     */
     public function image($image, $default = false)
     {
         $image = new Image($image, $default, $this);
@@ -41,12 +70,20 @@ class Storage
         return $image;
     }
 
+    /**
+     * @param $settings
+     */
     public function settings($settings)
     {
         $this->settings['stylists'] = $settings['stylists'];
     }
 
 
+    /**
+     * @param $file
+     *
+     * @return bool|string
+     */
     public function getFile($file)
     {
         $sourceAdapter = 'local://' . $file;
@@ -64,6 +101,12 @@ class Storage
     }
 
 
+    /**
+     * @param        $file
+     * @param string $adapter
+     *
+     * @return Response
+     */
     public function renderFile($file, $adapter = 'local')
     {
         $fileAdapter = $adapter . '://' . $file;
@@ -83,6 +126,12 @@ class Storage
         return Response::render($contents)->headers(['Content-type' => $getMimetype]);
     }
 
+    /**
+     * @param $adapter
+     * @param $file
+     *
+     * @return array
+     */
     public function drop($adapter, $file)
     {
         $get = $this->driver->get($adapter, $file, true);
@@ -111,6 +160,14 @@ class Storage
     }
 
 
+    /**
+     * @param      $adapter
+     * @param      $tmp_name
+     * @param      $pathImage
+     * @param bool $forced
+     *
+     * @return array
+     */
     public function put($adapter, $tmp_name, $pathImage, $forced = false)
     {
         try {
