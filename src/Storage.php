@@ -177,7 +177,7 @@ class Storage
 
             if ($this->manager->has($adapter . '://' . $pathImage)) {
                 if ($forced == false) {
-                    throw new Exception('File Allredy Exist');
+                    throw new \Exception('File Allredy Exist');
                 }
 
                 $this->manager->delete($adapter . '://' . $pathImage);
@@ -185,13 +185,13 @@ class Storage
 
             $stream = fopen($tmp_name, 'r+');
             if (!$stream) {
-                throw new Exception('Failed to open uploaded file');
+                throw new \Exception('Failed to open uploaded file');
             }
 
             $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
             $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
             fclose($stream);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ['return' => false, 'response' => $e->getMessage()];
         }
 
