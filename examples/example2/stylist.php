@@ -6,14 +6,14 @@ ini_set("display_errors", "off"); # Debug settings
 
 define("APP_DIR", dirname(__FILE__) . '/');
 include_once '../../vendor/autoload.php';
-include "Stylists/OrginalStylist.php";
+include "Stylists/OriginalStylist.php";
 include "Stylists/RectStylist.php";
 include "Stylists/SquareStylist.php";
 
 $Storage = new Storage();
 $Storage->settings([
     'stylists' => [
-        'Orginal' => OrginalStylist::class,
+        'Orginal' => OriginalStylist::class,
         'Rect' => RectStylist::class,
         'Square' => SquareStylist::class
     ]

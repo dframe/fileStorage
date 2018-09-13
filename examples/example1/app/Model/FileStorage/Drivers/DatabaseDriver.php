@@ -3,8 +3,20 @@ namespace Model\FileStorage\Drivers;
 
 use Dframe\FileStorage\Drivers\DatabaseDriverInterface;
 
+/**
+ * Class DatabaseDriverModel
+ *
+ * @package Model\FileStorage\Drivers
+ */
 class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterface
 {
+    /**
+     * @param      $adapter
+     * @param      $path
+     * @param bool $cache
+     *
+     * @return mixed
+     */
     public function get($adapter, $path, $cache = false)
     {
         if (!isset($path) or empty($path) or empty($adapter)) {
@@ -27,6 +39,14 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
         return $this->methodResult(true, $row);
     }
 
+    /**
+     * @param      $adapter
+     * @param      $path
+     * @param      $mime
+     * @param bool $stream
+     *
+     * @return mixed
+     */
     public function put($adapter, $path, $mime, $stream = false)
     {
         $get = $this->get($adapter, $path);
@@ -38,11 +58,20 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
         return $this->methodResult(true, ['lastInsertId' => $getLastInsertId]);
     }
 
-    public function cache($adapter, $orginalPath, $cachePath, $mime, $stream = false)
+    /**
+     * @param      $adapter
+     * @param      $originalPath
+     * @param      $cachePath
+     * @param      $mime
+     * @param bool $stream
+     *
+     * @return mixed
+     */
+    public function cache($adapter, $originalPath, $cachePath, $mime, $stream = false)
     {
-        $row = $this->baseClass->db->select('files', '*', ['file_path' => $orginalPath])->result();
+        $row = $this->baseClass->db->select('files', '*', ['file_path' => $originalPath])->result();
         if (empty($row['file_id'])) {
-            $put = $this->put($adapter, $orginalPath, $mime);
+            $put = $this->put($adapter, $originalPath, $mime);
             $row['file_id'] = $put['lastInsertId'];
         }
 
@@ -66,6 +95,12 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
         return $this->methodResult(false);
     }
 
+    /**
+     * @param $adapter
+     * @param $path
+     *
+     * @return mixed
+     */
     public function drop($adapter, $path)
     {
         try {
@@ -76,7 +111,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
             $affectedRows = $this->baseClass->db->delete('files', ['file_id' => $row['file_id']])->affectedRows();
 
             $this->baseClass->db->end();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->baseClass->db->back();
             return $this->methodResult(false, ['response' => $e->getMessages()]);
         }

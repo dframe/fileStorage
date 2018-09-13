@@ -1,4 +1,5 @@
 <?php
+
 use Imagecraft\ImageBuilder;
 
 /*
@@ -8,8 +9,20 @@ use Imagecraft\ImageBuilder;
  * tablicy $stylistParam jako wpis o kluczu 'size'
  */
 
+/**
+ * Class SquareStylist
+ */
 class SquareStylist extends \Dframe\FileStorage\Stylist
 {
+    /**
+     * @param resource $originStream
+     * @param string   $extension
+     * @param bool     $stylistObj
+     * @param bool     $stylistParam
+     *
+     * @return bool|resource
+     * @throws Exception
+     */
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
@@ -43,6 +56,11 @@ class SquareStylist extends \Dframe\FileStorage\Stylist
         return $tmpFile;
     }
 
+    /**
+     * @param $stylistParam
+     *
+     * @return string
+     */
     public function identify($stylistParam)
     {
         if (isset($stylistParam['size'])) {

@@ -8,6 +8,11 @@ if (!class_exists('\PHPUnit\Framework\TestCase') and class_exists('\PHPUnit_Fram
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
 }
 
+/**
+ * Class SetupTest
+ *
+ * @package Dframe\FileStorage\tests
+ */
 class SetupTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()

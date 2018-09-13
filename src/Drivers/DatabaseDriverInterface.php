@@ -20,11 +20,41 @@ namespace Dframe\FileStorage\Drivers;
 
 interface DatabaseDriverInterface
 {
-    public function get($adapter, $path);
+    /**
+     * @param      $adapter
+     * @param      $path
+     * @param bool $cache
+     *
+     * @return mixed
+     */
+    public function get($adapter, $path, $cache = false);
 
+    /**
+     * @param $adapter
+     * @param $path
+     * @param $mine
+     * @param $stream
+     *
+     * @return mixed
+     */
     public function put($adapter, $path, $mine, $stream);
 
-    public function cache($adapter, $orginalId, $path, $mine, $stream);
+    /**
+     * @param $adapter
+     * @param $originalId
+     * @param $path
+     * @param $mine
+     * @param $stream
+     *
+     * @return mixed
+     */
+    public function cache($adapter, $originalId, $path, $mine, $stream);
 
+    /**
+     * @param $adapter
+     * @param $path
+     *
+     * @return mixed
+     */
     public function drop($adapter, $path);
 }

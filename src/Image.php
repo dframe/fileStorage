@@ -24,19 +24,44 @@ class Image
     /**
      * @var string
      */
-    public $stylist = 'orginal';
+    public $stylist = 'original';
 
     /**
      * @var array
      */
     public $stylists = [
-        'orginal' => \Dframe\FileStorage\Stylist\SimpleStylist::class
+        'original' => \Dframe\FileStorage\Stylist\SimpleStylist::class
     ];
 
     /**
      * @var
      */
     public $size;
+
+    /**
+     * @var bool
+     */
+    protected $defaultImage;
+
+    /**
+     * @var
+     */
+    protected $storage;
+
+    /**
+     * @var Router
+     */
+    protected $router;
+
+    /**
+     * @var mixed|null
+     */
+    protected $cache;
+
+    /**
+     * @var MountManager
+     */
+    protected $manager;
 
     /**
      * Image constructor.
@@ -93,18 +118,18 @@ class Image
 
     /**
      * @param      $adapter
-     * @param      $orginalImage
+     * @param      $originalImage
      * @param bool $default
      *
      * @return mixed
      */
-    public function cache($adapter, $orginalImage, $default = false)
+    public function cache($adapter, $originalImage, $default = false)
     {
         $output = [];
         $output['stylist'] = $this->stylist;
         $output['size'] = $this->size;
 
-        $ext = substr($orginalImage, strrpos($orginalImage, "."));
+        $ext = substr($originalImage, strrpos($originalImage, "."));
 
         $stylist = $output['stylist'];
 
@@ -113,17 +138,17 @@ class Image
         }
 
         $cachePath = [];
-        $cachePath[0] = substr(md5($orginalImage), 0, 6);
-        $cachePath[1] = substr(md5($orginalImage), 6, 6);
-        $cachePath[2] = substr(md5($stylist . '+' . $orginalImage), 0, 6);
+        $cachePath[0] = substr(md5($originalImage), 0, 6);
+        $cachePath[1] = substr(md5($originalImage), 6, 6);
+        $cachePath[2] = substr(md5($stylist . '+' . $originalImage), 0, 6);
         $cachePath[3] = $stylist;
 
         $cache = $cachePath[0] . '-' . $cachePath[1] . '-' . $cachePath[2] . '-' . $cachePath[3] . $ext;
-        $cache = str_replace(basename($orginalImage, $ext) . $ext, $cache, $orginalImage);
+        $cache = str_replace(basename($originalImage, $ext) . $ext, $cache, $originalImage);
 
         $cacheAdapter = 'cache://' . $cache;
 
-        $sourceAdapter = $adapter . '://' . $orginalImage;
+        $sourceAdapter = $adapter . '://' . $originalImage;
 
         $has = $this->manager->has($cacheAdapter);
         if ($has == false or ($has == true and $this->manager->getTimestamp($cacheAdapter) < strtotime("-" . $this->cache['life'] . " seconds"))) {
@@ -143,7 +168,7 @@ class Image
 
                 if (!empty($this->storage)) {
                     if (!empty($this->storage->driver)) {
-                        $this->storage->driver->cache($adapter, $orginalImage, $cache, $mimetype, $readStream);
+                        $this->storage->driver->cache($adapter, $originalImage, $cache, $mimetype, $readStream);
                     }
                     $this->manager->putStream($cacheAdapter, $readStream);
                 } else {
@@ -151,14 +176,14 @@ class Image
                 }
             } elseif (!empty($this->defaultImage)) {
                 if (!empty($this->storage->driver)) {
-                    $get = $this->storage->driver->get($adapter, $orginalImage, true);
+                    $get = $this->storage->driver->get($adapter, $originalImage, true);
                     if ($get['return'] == true) {
                         foreach ($get['cache'] as $key => $value) {
                             if ($this->manager->has('cache://' . $value['file_cache_path'])) {
                                 $this->manager->delete('cache://' . $value['file_cache_path']);
                             }
                         }
-                        //$this->storage->driver->drop($orginalImage);
+                        //$this->storage->driver->drop($originalImage);
                     }
                 }
                 if ($default == false) {
@@ -201,7 +226,7 @@ class Image
     {
         $data = $this->cache($adapter, $this->orginalImage);
         if (!empty($this->storage->driver)) {
-            $data = $this->storage->driver->get($adapter, $this->orginalImage, $get['cache'], $mimetype, $readStream);
+            $data = $this->storage->driver->get($adapter, $this->orginalImage);
         }
         return $data;
     }

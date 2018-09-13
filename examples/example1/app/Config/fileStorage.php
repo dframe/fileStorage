@@ -1,8 +1,9 @@
 <?php
-use League\Flysystem\Filesystem;
+
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Cached\CachedAdapter;
 use League\Flysystem\Cached\Storage\Memory as CacheStore;
+use League\Flysystem\Filesystem;
 
 $localAdapter = new Local(
     dirname(__DIR__) . '/../app/View/uploads',
@@ -51,7 +52,7 @@ $cacheAdapter = new Local(
         ]
     ]
 );
-        
+
 // Create the cache store
 $cacheStore = new CacheStore();
 // Decorate the adapter

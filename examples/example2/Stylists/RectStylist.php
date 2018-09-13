@@ -1,4 +1,5 @@
 <?php
+
 use Imagecraft\ImageBuilder;
 
 /*
@@ -8,11 +9,22 @@ use Imagecraft\ImageBuilder;
  * tablicy $stylistParam jako wpisy o kluczach 'w' i 'h'
  */
 
+/**
+ * Class RectStylist
+ */
 class RectStylist extends \Dframe\FileStorage\Stylist
 {
+    /**
+     * @param resource $originStream
+     * @param string   $extension
+     * @param bool     $stylistObj
+     * @param bool     $stylistParam
+     *
+     * @return bool|resource
+     * @throws Exception
+     */
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
-        echo 'tes';
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
         $builder = new ImageBuilder($options);
 
@@ -43,6 +55,11 @@ class RectStylist extends \Dframe\FileStorage\Stylist
         return $tmpFile;
     }
 
+    /**
+     * @param $stylistParam
+     *
+     * @return string
+     */
     public function identify($stylistParam)
     {
         return 'RectStylist-' . $stylistParam['size'];

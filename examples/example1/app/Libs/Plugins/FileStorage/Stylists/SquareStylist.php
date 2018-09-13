@@ -1,14 +1,32 @@
 <?php
-namespace Libs\Plugins\FileStorage\Stylist;
+
+namespace Libs\Plugins\FileStorage\Stylists;
 
 use Imagecraft\ImageBuilder;
 
 /*
- * Stylizer real
+ * Abstrakcyjna klasa kwadratowego stylisty
+ * Wycina kwadrat ze srodkowej czesci obrazka
+ * Bok kwadratu ma dlugosc w pikselach, podana w
+ * tablicy $stylistParam jako wpis o kluczu 'size'
  */
 
-class RealStylist extends \Dframe\FileStorage\Stylist
+/**
+ * Class SquareStylist
+ *
+ * @package Libs\Plugins\FileStorage\Stylists
+ */
+class SquareStylist extends \Dframe\FileStorage\Stylist
 {
+    /**
+     * @param resource $originStream
+     * @param string   $extension
+     * @param bool     $stylistObj
+     * @param bool     $stylistParam
+     *
+     * @return bool|resource
+     * @throws \Exception
+     */
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {
         $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
@@ -17,20 +35,20 @@ class RealStylist extends \Dframe\FileStorage\Stylist
         $layer = $builder->addBackgroundLayer();
         $contents = stream_get_contents($originStream);
         $layer->contents($contents);
-        
-        
+
+
         if (isset($stylistParam['size'])) {
             $size = $stylistParam['size'];
         } else {
             $size = '100';
         }
-        
-        $layer->resize($size, $size, 'shrink');
-        
+
+        $layer->resize($size, $size, 'fill_crop');
+
         fclose($originStream);
-        
+
         $image = $builder->save();
-        
+
         $tmpFile = tmpfile();
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
@@ -42,6 +60,11 @@ class RealStylist extends \Dframe\FileStorage\Stylist
         return $tmpFile;
     }
 
+    /**
+     * @param $stylistParam
+     *
+     * @return string
+     */
     public function identify($stylistParam)
     {
         if (isset($stylistParam['size'])) {
@@ -50,6 +73,6 @@ class RealStylist extends \Dframe\FileStorage\Stylist
             $size = '100';
         }
 
-        return 'realStylist-'.$size;
+        return 'squareStylist-' . $size;
     }
 }
