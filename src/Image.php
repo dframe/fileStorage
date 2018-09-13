@@ -23,7 +23,7 @@ class Image
 {
     public $stylist = 'orginal';
     public $stylists = [
-        'orginal' => \Dframe\Dframe\FileStorage\Stylist\SimpleStylist::class
+        'orginal' => \Dframe\FileStorage\Stylist\SimpleStylist::class
     ];
     public $size;
 
