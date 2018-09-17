@@ -199,7 +199,7 @@ class Storage
         if ($put['return'] != false) {
             return ['return' => true, 'fileId' => $put['lastInsertId']];
         } else {
-            $get = $this->driver->get($adapter . 'local', $pathImage);
+            $get = $this->driver->get($adapter, $pathImage);
             return ['return' => true, 'fileId' => $get['file_id']];
         }
 
