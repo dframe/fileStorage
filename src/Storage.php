@@ -44,17 +44,21 @@ class Storage
      *
      * @param \Dframe\FileStorage\Drivers\DatabaseDriverInterface $driver
      */
-    public function __construct($driver = null)
+    public function __construct($driver = null, $config = null, $router = true)
     {
         $this->driver = $driver;
 
-        //Default
-        //$configFileStorage = Config::load('config', 'app/Libs/Plugins/fileStorage');
-        $configFileStorage = Config::load('fileStorage');
+        if (is_null($config)) {
+            $configFileStorage = Config::load('fileStorage');
+            $adapters = $configFileStorage->get('adapters', []);
+        } else {
+            $adapters = $config['adapters'];
+        }
 
-        $adapters = $configFileStorage->get('adapters', []);
         $this->manager = new MountManager($adapters);
-        $this->router = new Router();
+        if ($router === true) {
+            $this->router = new Router();
+        }
     }
 
     /**
