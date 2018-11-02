@@ -70,12 +70,19 @@ class Image
      * @param bool $default
      * @param      $storage
      */
-    public function __construct($image, $default = false, $storage)
+    public function __construct($config, $image, $default = false, $storage)
     {
-        $configFileStorage = Config::load('fileStorage');
 
-        $adapters = $configFileStorage->get('adapters', []);
-        $this->cache = $configFileStorage->get('cache', ['life' => 600]);
+        if (is_null($config)) {
+            $configFileStorage = Config::load('fileStorage');
+            $adapters = $configFileStorage->get('adapters', []);
+            $cache = $configFileStorage->get('cache', ['life' => 600]);
+        } else {
+            $adapters = $config['adapters'];
+            $cache = $config['cache'] ?? ['life' => 600];
+        }
+
+        $this->cache = $cache;
         $this->manager = new MountManager($adapters);
         $this->router = new Router();
         $this->orginalImage = $image;
