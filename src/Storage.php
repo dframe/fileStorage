@@ -54,7 +54,8 @@ class Storage
         } else {
             $adapters = $config['adapters'];
         }
-
+        
+        $this->config = $config;
         $this->manager = new MountManager($adapters);
         if ($router === true) {
             $this->router = new Router();
@@ -69,7 +70,7 @@ class Storage
      */
     public function image($image, $default = false)
     {
-        $image = new Image($image, $default, $this);
+        $image = new Image($this->config, $image, $default, $this);
         $image->addStylist($this->settings['stylists']);
         return $image;
     }
