@@ -30,9 +30,9 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
 
         if ($cache != false) {
             if ($cache === true) {
-                $row['cache'] = $this->baseClass->db->select('files_cache', '*', ['file_id' => $row['file_id']])->results();
+                $row['cache'] = $this->baseClass->db->select('file_cache', '*', ['file_id' => $row['file_id']])->results();
             } else {
-                $row['cache'] = $this->baseClass->db->select('files_cache', '*', ['file_cache_path' => $cache])->result();
+                $row['cache'] = $this->baseClass->db->select('file_cache', '*', ['file_cache_path' => $cache])->result();
             }
         }
 
@@ -75,7 +75,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
             $row['file_id'] = $put['lastInsertId'];
         }
 
-        $cache = $this->baseClass->db->select('files_cache', '*', ['file_cache_path' => $cachePath])->result();
+        $cache = $this->baseClass->db->select('file_cache', '*', ['file_cache_path' => $cachePath])->result();
         if (empty($cache['id']) and !empty($row['file_id'])) {
             $data = [
                 'file_id' => $row['file_id'],
@@ -88,7 +88,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
             //     $data['file_cache_metadata'] = json_encode($metadata->get());
             // }
 
-            $getLastInsertId = $this->baseClass->db->insert('files_cache', $data);
+            $getLastInsertId = $this->baseClass->db->insert('file_cache', $data);
             return $this->methodResult(true, ['lastInsertId' => $getLastInsertId]);
         }
 
@@ -107,7 +107,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
             $this->baseClass->db->start();
             $row = $this->baseClass->db->pdoQuery('SELECT * FROM files WHERE `file_path` = ?', [$path])->result();
 
-            $affectedRows = $this->baseClass->db->delete('files_cache', ['file_id' => $row['file_id']])->affectedRows();
+            $affectedRows = $this->baseClass->db->delete('file_cache', ['file_id' => $row['file_id']])->affectedRows();
             $affectedRows = $this->baseClass->db->delete('files', ['file_id' => $row['file_id']])->affectedRows();
 
             $this->baseClass->db->end();
