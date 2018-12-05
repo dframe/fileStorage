@@ -71,7 +71,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
     {
         $row = $this->baseClass->db->select('files', '*', ['file_path' => $originalPath])->result();
         if (empty($row['file_id'])) {
-            $put = $this->put($adapter, $originalPath, $mime);
+            $put = $this->put($adapter, $originalPath, $mime, $stream);
             $row['file_id'] = $put['lastInsertId'];
         }
 
