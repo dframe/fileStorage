@@ -45,6 +45,8 @@ class Storage
      * Storage constructor.
      *
      * @param \Dframe\FileStorage\Drivers\DatabaseDriverInterface $driver
+     * @param null                                                $config
+     * @param bool                                                $router
      */
     public function __construct($driver = null, $config = null, $router = true)
     {
@@ -133,6 +135,9 @@ class Storage
             ->headers(['Content-type' => $getMimetype]);
     }
 
+    /**
+     * @return Drivers\DatabaseDriverInterface|null
+     */
     public function getDriver()
     {
         return $this->driver;

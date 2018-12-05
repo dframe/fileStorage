@@ -66,6 +66,7 @@ class Image
     /**
      * Image constructor.
      *
+     * @param                             $config
      * @param                             $image
      * @param bool                        $default
      * @param \Dframe\FileStorage\Storage $storage
