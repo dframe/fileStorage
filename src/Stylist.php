@@ -22,7 +22,6 @@ namespace Dframe\FileStorage;
  *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
-
 abstract class Stylist
 {
 

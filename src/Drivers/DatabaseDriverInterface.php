@@ -17,7 +17,6 @@ namespace Dframe\FileStorage\Drivers;
  *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
-
 interface DatabaseDriverInterface
 {
     /**

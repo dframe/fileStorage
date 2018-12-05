@@ -17,7 +17,6 @@ use Imagecraft\ImageBuilder;
  *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
-
 class SimpleStylist extends \Dframe\FileStorage\Stylist
 {
     /**

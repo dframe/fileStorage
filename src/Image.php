@@ -213,6 +213,24 @@ class Image
     }
 
     /**
+     * Zwraca obiekt stylisty o wskazanej nazwie
+     * Tylko do uzytku wewnatrz klasy!
+     *
+     * @param  string $stylist
+     *
+     * @return \Dframe\FileStorage\Stylist
+     */
+    protected function getStylist($stylist = 'orginal')
+    {
+        $className = $this->stylists[$stylist];
+        if (!class_exists($className) or !method_exists($className, 'stylize')) {
+            throw new \Exception('Requested stylist "' . $stylist . '" was not found or is incorrect');
+        }
+
+        return new $className();
+    }
+
+    /**
      * @param string $adapter
      *
      * @return array
@@ -263,23 +281,5 @@ class Image
     public function addStylist($stylists)
     {
         $this->stylists = array_merge($this->stylists, $stylists);
-    }
-
-    /**
-     * Zwraca obiekt stylisty o wskazanej nazwie
-     * Tylko do uzytku wewnatrz klasy!
-     *
-     * @param  string $stylist
-     *
-     * @return \Dframe\FileStorage\Stylist
-     */
-    protected function getStylist($stylist = 'orginal')
-    {
-        $className = $this->stylists[$stylist];
-        if (!class_exists($className) or !method_exists($className, 'stylize')) {
-            throw new \Exception('Requested stylist "' . $stylist . '" was not found or is incorrect');
-        }
-
-        return new $className();
     }
 }
