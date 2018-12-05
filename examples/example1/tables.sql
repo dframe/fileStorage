@@ -41,7 +41,7 @@ CREATE TABLE `files` (
 -- Struktura tabeli dla tabeli `files_cache`
 --
 
-CREATE TABLE `files_cache` (
+CREATE TABLE `file_cache` (
   `id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
   `file_cache_path` varchar(255) NOT NULL,
@@ -82,7 +82,7 @@ ALTER TABLE `files`
 --
 -- AUTO_INCREMENT dla tabeli `files_cache`
 --
-ALTER TABLE `files_cache`
+ALTER TABLE `file_cache`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
