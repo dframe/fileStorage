@@ -25,10 +25,12 @@ class Storage
      * @var MountManager
      */
     protected $manager;
+
     /**
      * @var Router
      */
     protected $router;
+
     /**
      * @var null
      */
@@ -54,7 +56,7 @@ class Storage
         } else {
             $adapters = $config['adapters'];
         }
-        
+
         $this->config = $config;
         $this->manager = new MountManager($adapters);
         if ($router === true) {
@@ -72,6 +74,7 @@ class Storage
     {
         $image = new Image($this->config, $image, $default, $this);
         $image->addStylist($this->settings['stylists']);
+
         return $image;
     }
 
@@ -82,7 +85,6 @@ class Storage
     {
         $this->settings['stylists'] = $settings['stylists'];
     }
-
 
     /**
      * @param $file
@@ -105,7 +107,6 @@ class Storage
         return $this->router->makeUrl('filestorage/file') . '?file=' . $file;
     }
 
-
     /**
      * @param        $file
      * @param string $adapter
@@ -117,10 +118,10 @@ class Storage
         $fileAdapter = $adapter . '://' . $file;
         // Retrieve a read-stream
         if (!$this->manager->has($fileAdapter)) {
-            $body = "<h1>404 Not Found</h1> \n\r" .
-                "The page that you have requested could not be found.";
+            $body = "<h1>404 Not Found</h1> \n\r" . "The page that you have requested could not be found.";
 
-            return Response::render($body)->status(404);
+            return Response::render($body)
+                ->status(404);
         }
 
         $getMimetype = $this->manager->getMimetype($fileAdapter);
@@ -128,7 +129,13 @@ class Storage
         $contents = stream_get_contents($stream);
         fclose($stream);
 
-        return Response::render($contents)->headers(['Content-type' => $getMimetype]);
+        return Response::render($contents)
+            ->headers(['Content-type' => $getMimetype]);
+    }
+
+    public function getDriver()
+    {
+        return $this->driver;
     }
 
     /**
@@ -163,7 +170,6 @@ class Storage
 
         return ['return' => false, 'response' => 'Brak pliku'];
     }
-
 
     /**
      * @param      $adapter
@@ -200,14 +206,13 @@ class Storage
             return ['return' => false, 'response' => $e->getMessage()];
         }
 
-
         if ($put['return'] != false) {
             return ['return' => true, 'fileId' => $put['lastInsertId']];
         } else {
             $get = $this->driver->get($adapter, $pathImage);
+
             return ['return' => true, 'fileId' => $get['file_id']];
         }
-
 
         return ['return' => false, 'response' => 'Bład'];
     }

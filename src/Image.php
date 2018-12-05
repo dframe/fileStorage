@@ -66,13 +66,12 @@ class Image
     /**
      * Image constructor.
      *
-     * @param      $image
-     * @param bool $default
-     * @param      $storage
+     * @param                             $image
+     * @param bool                        $default
+     * @param \Dframe\FileStorage\Storage $storage
      */
     public function __construct($config, $image, $default = false, $storage)
     {
-
         if (is_null($config)) {
             $configFileStorage = Config::load('fileStorage');
             $adapters = $configFileStorage->get('adapters', []);
@@ -98,6 +97,7 @@ class Image
     public function stylist($stylist = false)
     {
         $this->stylist = $stylist;
+
         return $this;
     }
 
@@ -109,6 +109,7 @@ class Image
     public function size($size)
     {
         $this->size = $size;
+
         return $this;
     }
 
@@ -120,6 +121,7 @@ class Image
     public function display($adapter = 'local')
     {
         $get = $this->cache($adapter, $this->orginalImage);
+
         return $this->router->makeUrl('filestorage/images/:params?params=' . $get['cache']);
     }
 
@@ -174,25 +176,28 @@ class Image
                 }
 
                 if (!empty($this->storage)) {
-                    if (!empty($this->storage->driver)) {
-                        $this->storage->driver->cache($adapter, $originalImage, $cache, $mimetype, $readStream);
+                    if (!empty($this->storage->getDriver())) {
+                        $this->storage->getDriver()
+                            ->cache($adapter, $originalImage, $cache, $mimetype, $readStream);
                     }
                     $this->manager->putStream($cacheAdapter, $readStream);
                 } else {
                     return false;
                 }
             } elseif (!empty($this->defaultImage)) {
-                if (!empty($this->storage->driver)) {
-                    $get = $this->storage->driver->get($adapter, $originalImage, true);
+                if (!empty($this->storage->getDriver())) {
+                    $get = $this->storage->getDriver()
+                        ->get($adapter, $originalImage, true);
                     if ($get['return'] == true) {
                         foreach ($get['cache'] as $key => $value) {
                             if ($this->manager->has('cache://' . $value['file_cache_path'])) {
                                 $this->manager->delete('cache://' . $value['file_cache_path']);
                             }
                         }
-                        //$this->storage->driver->drop($originalImage);
+                        //$this->storage->getDriver()->drop($originalImage);
                     }
                 }
+
                 if ($default == false) {
                     return $this->cache($adapter, $this->defaultImage, true); //zwracać bład
                 }
@@ -204,6 +209,59 @@ class Image
         return [
             'cache' => $cache
         ];
+    }
+
+    /**
+     * @param string $adapter
+     *
+     * @return array
+     */
+    public function get($adapter = 'local')
+    {
+        $data = $this->cache($adapter, $this->orginalImage);
+        if (!empty($this->storage->getDriver())) {
+            $get = $this->storage->getDriver()
+                ->get($adapter, $this->orginalImage, $data['cache']);
+            if ($get['return'] === true) {
+                $data['data'] = $get['cache'];
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param        $file
+     * @param string $adapter
+     *
+     * @return mixed
+     */
+    public function renderFile($file, $adapter = 'local')
+    {
+        $fileAdapter = $adapter . '://' . $file;
+        // Retrieve a read-stream
+        if (!$this->manager->has($fileAdapter)) {
+            $body = "<h1>404 Not Found</h1> \n\r" . "The page that you have requested could not be found.";
+
+            return Response::render($body)
+                ->status(404);
+        }
+
+        $getMimetype = $this->manager->getMimetype($fileAdapter);
+        $stream = $this->manager->readStream($fileAdapter);
+        $contents = stream_get_contents($stream);
+        fclose($stream);
+
+        return Response::render($contents)
+            ->headers(['Content-type' => $getMimetype]);
+    }
+
+    /**
+     * @param $stylists
+     */
+    public function addStylist($stylists)
+    {
+        $this->stylists = array_merge($this->stylists, $stylists);
     }
 
     /**
@@ -222,52 +280,5 @@ class Image
         }
 
         return new $className();
-    }
-
-    /**
-     * @param string $adapter
-     *
-     * @return array
-     */
-    public function get($adapter = 'local')
-    {
-        $data = $this->cache($adapter, $this->orginalImage);
-        if (!empty($this->storage->driver)) {
-            $data = $this->storage->driver->get($adapter, $this->orginalImage);
-        }
-        return $data;
-    }
-
-    /**
-     * @param        $file
-     * @param string $adapter
-     *
-     * @return mixed
-     */
-    public function renderFile($file, $adapter = 'local')
-    {
-        $fileAdapter = $adapter . '://' . $file;
-        // Retrieve a read-stream
-        if (!$this->manager->has($fileAdapter)) {
-            $body = "<h1>404 Not Found</h1> \n\r" .
-                "The page that you have requested could not be found.";
-
-            return Response::render($body)->status(404);
-        }
-
-        $getMimetype = $this->manager->getMimetype($fileAdapter);
-        $stream = $this->manager->readStream($fileAdapter);
-        $contents = stream_get_contents($stream);
-        fclose($stream);
-
-        return Response::render($contents)->headers(['Content-type' => $getMimetype]);
-    }
-
-    /**
-     * @param $stylists
-     */
-    public function addStylist($stylists)
-    {
-        $this->stylists = array_merge($this->stylists, $stylists);
     }
 }
