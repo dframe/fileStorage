@@ -243,11 +243,11 @@ class Image
      *
      * @return array
      */
-    public function get($adapter = 'local')
+    public function get($adapter = 'local', $data = false)
     {
         $data = $this->cache($adapter, $this->orginalImage);
         
-        if (!empty($this->storage->getDriver())) {
+        if (!empty($this->storage->getDriver()) and $data === true) {
             $get = $this->storage->getDriver()
                 ->get($adapter, $this->orginalImage, $data['cache']);
             if ($get['return'] === true) {
