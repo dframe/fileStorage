@@ -42,6 +42,11 @@ class Storage
     protected $settings;
 
     /**
+     * @var array
+     */
+    protected $config = [];
+
+    /**
      * Storage constructor.
      *
      * @param \Dframe\FileStorage\Drivers\DatabaseDriverInterface $driver
@@ -141,6 +146,18 @@ class Storage
     public function getDriver()
     {
         return $this->driver;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig($key = null)
+    {
+        if (!is_null($key)) {
+            return $this->config[$key] ?? null;
+        }
+
+        return $this->config;
     }
 
     /**
