@@ -139,7 +139,10 @@ class Image
         $output['stylist'] = $this->stylist;
         $output['size'] = $this->size;
 
-        $ext = substr($originalImage, strrpos($originalImage, "."));
+        /**
+         * Get extension
+         */
+        $ext = pathinfo($originalImage, PATHINFO_EXTENSION);
 
         $stylist = $output['stylist'];
 
@@ -147,17 +150,22 @@ class Image
             $stylist .= '-' . $this->size;
         }
 
+        /**
+         * Create Static cache path based on $originalImage
+         */
         $cachePath = [];
         $cachePath[0] = substr(md5($originalImage), 0, 6);
         $cachePath[1] = substr(md5($originalImage), 6, 6);
         $cachePath[2] = substr(md5($stylist . '+' . $originalImage), 0, 6);
         $cachePath[3] = $stylist;
 
-        $cache = $cachePath[0] . '-' . $cachePath[1] . '-' . $cachePath[2] . '-' . $cachePath[3] . $ext;
-        $cache = str_replace(basename($originalImage, $ext) . $ext, $cache, $originalImage);
+        $basename = basename($originalImage, '.' . $ext);
+        if (!empty($basename)) {
+            $basename = $basename . '-';
+        }
+        $cache = $basename . $cachePath[0] . '-' . $cachePath[1] . '-' . $cachePath[2] . '-' . $cachePath[3] . '.' . $ext;
 
         $cacheAdapter = 'cache://' . $cache;
-
         $sourceAdapter = $adapter . '://' . $originalImage;
 
         $has = $this->manager->has($cacheAdapter);
@@ -238,6 +246,7 @@ class Image
     public function get($adapter = 'local')
     {
         $data = $this->cache($adapter, $this->orginalImage);
+        
         if (!empty($this->storage->getDriver())) {
             $get = $this->storage->getDriver()
                 ->get($adapter, $this->orginalImage, $data['cache']);
