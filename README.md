@@ -30,6 +30,7 @@ Simple usage
 ## What's included?
  * Image stylist
  * Storage files and information
+ * Cache generator
 
 # Feature
  * Text on images
