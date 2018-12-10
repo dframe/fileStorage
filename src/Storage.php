@@ -169,54 +169,59 @@ class Storage
     public function drop($adapter, $file)
     {
         $get = $this->driver->get($adapter, $file, true);
-        if ($get['return'] == true) {
-            if (!empty($get['cache'])) {
-                foreach ($get['cache'] as $key => $value) {
-                    if ($this->manager->has($adapter . '://' . $value['file_cache_path'])) {
-                        $this->manager->delete($adapter . '://' . $value['file_cache_path']);
-                    }
-                }
-            }
-
-            if ($this->manager->has($adapter . '://' . $get['file_path'])) {
-                $this->manager->delete($adapter . '://' . $get['file_path']);
-            }
-
-            $drop = $this->driver->drop($adapter, $file);
-            if ($drop['return'] != true) {
-                return ['return' => false, 'response' => $drop['response']];
-            }
-
-            return ['return' => true, 'response' => 'Pomyślnie usunięto'];
+        if ($get['return'] !== true) {
+            return ['return' => false, 'response' => 'Brak pliku'];
         }
 
-        return ['return' => false, 'response' => 'Brak pliku'];
+        /**
+         * Get all cache
+         */
+        if (!empty($get['cache'])) {
+            foreach ($get['cache'] as $key => $value) {
+                if ($this->manager->has($adapter . '://' . $value['file_cache_path'])) {
+                    $this->manager->delete($adapter . '://' . $value['file_cache_path']);
+                }
+            }
+        }
+
+        if ($this->manager->has($adapter . '://' . $get['file_path'])) {
+            $this->manager->delete($adapter . '://' . $get['file_path']);
+        }
+
+        $drop = $this->driver->drop($adapter, $file);
+        if ($drop['return'] !== true) {
+            return ['return' => false, 'response' => $drop['response']];
+        }
+
+        return ['return' => true, 'response' => 'Pomyślnie usunięto'];
+
+
     }
 
     /**
      * @param      $adapter
-     * @param      $tmp_name
+     * @param      $tmpName
      * @param      $pathImage
      * @param bool $forced
      *
      * @return array
      */
-    public function put($adapter, $tmp_name, $pathImage, $forced = false)
+    public function put($adapter, $tmpName, $pathImage, $forced = false)
     {
         try {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mime = finfo_file($finfo, $tmp_name);
+            $mime = finfo_file($finfo, $tmpName);
             finfo_close($finfo);
 
             if ($this->manager->has($adapter . '://' . $pathImage)) {
                 if ($forced == false) {
-                    throw new \Exception('File Allredy Exist');
+                    throw new \Exception('File already Exist');
                 }
 
                 $this->manager->delete($adapter . '://' . $pathImage);
             }
 
-            $stream = fopen($tmp_name, 'r+');
+            $stream = fopen($tmpName, 'r+');
             if (!$stream) {
                 throw new \Exception('Failed to open uploaded file');
             }
@@ -224,18 +229,17 @@ class Storage
             $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
             $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
             fclose($stream);
+
         } catch (\Exception $e) {
             return ['return' => false, 'response' => $e->getMessage()];
         }
 
         if ($put['return'] != false) {
             return ['return' => true, 'fileId' => $put['lastInsertId']];
-        } else {
-            $get = $this->driver->get($adapter, $pathImage);
-
-            return ['return' => true, 'fileId' => $get['file_id']];
         }
 
-        return ['return' => false, 'response' => 'Bład'];
+        $get = $this->driver->get($adapter, $pathImage);
+        return ['return' => true, 'fileId' => $get['file_id']];
+
     }
 }
