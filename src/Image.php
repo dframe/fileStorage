@@ -164,6 +164,7 @@ class Image
             $basename = $basename . '-';
         }
         $cache = $basename . $cachePath[0] . '-' . $cachePath[1] . '-' . $cachePath[2] . '-' . $cachePath[3] . '.' . $ext;
+        $cache = str_replace($basename, rtrim($originalImage, '.'.$ext), $cache);
 
         $cacheAdapter = 'cache://' . $cache;
         $sourceAdapter = $adapter . '://' . $originalImage;
