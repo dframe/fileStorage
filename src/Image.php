@@ -44,7 +44,7 @@ class Image
     protected $defaultImage;
 
     /**
-     * @var
+     * @var \Dframe\FileStorage\Storage
      */
     protected $storage;
 
@@ -64,6 +64,11 @@ class Image
     protected $manager;
 
     /**
+     * @var string
+     */
+    protected $originalImage;
+
+    /**
      * Image constructor.
      *
      * @param                             $config
@@ -71,12 +76,12 @@ class Image
      * @param bool                        $default
      * @param \Dframe\FileStorage\Storage $storage
      */
-    public function __construct($config, $image, $default = false, $storage)
+    public function __construct($driver, $config)
     {
         if (is_null($config)) {
-            $configFileStorage = Config::load('fileStorage');
-            $adapters = $configFileStorage->get('adapters', []);
-            $cache = $configFileStorage->get('cache', ['life' => 600]);
+            $ConfigFileStorage = Config::load('fileStorage');
+            $adapters = $ConfigFileStorage->get('adapters', []);
+            $cache = $ConfigFileStorage->get('cache', ['life' => 600]);
         } else {
             $adapters = $config['adapters'];
             $cache = $config['cache'] ?? ['life' => 600];
@@ -84,10 +89,21 @@ class Image
 
         $this->cache = $cache;
         $this->manager = new MountManager($adapters);
-        $this->router = new Router();
-        $this->orginalImage = $image;
+        $this->storage = $driver;
+    }
+
+    /**
+     * @param      $image
+     * @param bool $default
+     *
+     * @return $this
+     */
+    public function setImage($image, $default = false)
+    {
+        $this->originalImage = $image;
         $this->defaultImage = $default;
-        $this->storage = $storage;
+
+        return $this;
     }
 
     /**
@@ -121,9 +137,8 @@ class Image
      */
     public function display($adapter = 'local')
     {
-        $get = $this->cache($adapter, $this->orginalImage);
-
-        return $this->router->makeUrl('filestorage/images/:params?params=' . $get['cache']);
+        $get = $this->cache($adapter, $this->originalImage);
+        return (new Router())->makeUrl('filestorage/images/:params?params=' . $get['cache']);
     }
 
     /**
@@ -164,7 +179,7 @@ class Image
             $basename = $basename . '-';
         }
         $cache = $basename . $cachePath[0] . '-' . $cachePath[1] . '-' . $cachePath[2] . '-' . $cachePath[3] . '.' . $ext;
-        $cache = str_replace($basename, rtrim($originalImage, '.'.$ext), $cache);
+        $cache = str_replace($basename, rtrim($originalImage, '.' . $ext), $cache);
 
         $cacheAdapter = 'cache://' . $cache;
         $sourceAdapter = $adapter . '://' . $originalImage;
@@ -246,11 +261,11 @@ class Image
      */
     public function get($adapter = 'local', $data = false)
     {
-        $data = $this->cache($adapter, $this->orginalImage);
-        
+        $data = $this->cache($adapter, $this->originalImage);
+
         if (!empty($this->storage->getDriver()) and $data === true) {
             $get = $this->storage->getDriver()
-                ->get($adapter, $this->orginalImage, $data['cache']);
+                ->get($adapter, $this->originalImage, $data['cache']);
             if ($get['return'] === true) {
                 $data['data'] = $get['cache'];
             }

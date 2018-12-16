@@ -34,6 +34,6 @@ $images[] = ['size' => 'Original', 'img' => $Storage->image('picture1.jpg')->sty
 <?php foreach ($images as $key => $image) {
     ?>
     Size: <?php echo $image['size']; ?>;<br>
-	<img src="cache/<?php echo $image['img']['cache']; ?>"><hr>
+	<img alt="" src="cache/<?php echo $image['img']['cache']; ?>"><hr>
 <?php
 } ?>

@@ -37,8 +37,11 @@ class MyFileSystem extends \Dframe\Controller
 
     public function init()
     {
-        $this->fileStorage = new \Dframe\FileStorage\Storage($this->loadModel('FileStorage/Drivers/DatabaseDriver'));
-        $this->fileStorage->settings([
+        $Driver = $this->loadModel('FileStorage/Drivers/DatabaseDriver');
+        $Config = Config::load('fileStorage');
+        
+        $this->FileStorage = new \Dframe\FileStorage\Storage($Driver, $Config->get());
+        $this->FileStorage->settings([
             'stylists' => [
                 'Orginal' => \Libs\Plugins\FileStorage\Stylist\OrginalStylist::class,
                 'Real' => \Libs\Plugins\FileStorage\Stylist\RealStylist::class,
@@ -67,7 +70,7 @@ class MyFileSystem extends \Dframe\Controller
                 }
 
 
-                $put = $this->fileStorage->put('local', $_FILES['file']['tmp_name'], 'images/path/name.' . $extension);
+                $put = $this->FileStorage->put('local', $_FILES['file']['tmp_name'], 'images/path/name.' . $extension);
                 if ($put['return'] == true) {
                     exit(json_encode(['return' => '1', 'response' => 'File Upload OK']));
                 }
@@ -78,7 +81,7 @@ class MyFileSystem extends \Dframe\Controller
 
             case 'DELETE':
 
-                $drop = $this->fileStorage->drop('local', 'images/path/name.jpg'); // Filename+Extension
+                $drop = $this->FileStorage->drop('local', 'images/path/name.jpg'); // Filename+Extension
                 if ($drop['return'] == true) {
                     exit(json_encode(['return' => '1', 'response' => 'File Deleted']));
                 }
@@ -103,7 +106,7 @@ class MyFileSystem extends \Dframe\Controller
 
     public function image()
     {
-        echo $this->fileStorage->image('images/path/name.jpg')
+        echo $this->FileStorage->image('images/path/name.jpg')
             ->stylist('square')
             ->size('250x250')
             ->display();
@@ -115,7 +118,7 @@ class MyFileSystem extends \Dframe\Controller
     public function render()
     {
         // Render file patch local: app/View/upload/images/path/name.jpg'
-        exit($this->fileStorage->renderFile('images/path/name.jpg', 'local'));
+        exit($this->FileStorage->renderFile('images/path/name.jpg', 'local'));
     }
 }
 

@@ -79,10 +79,9 @@ class Storage
      */
     public function image($image, $default = false)
     {
-        $image = new Image($this->config, $image, $default, $this);
-        $image->addStylist($this->settings['stylists']);
-
-        return $image;
+        $Image = new Image($this->driver, $this->config);
+        $Image->setImage($image, $default)->addStylist($this->settings['stylists']);
+        return $Image;
     }
 
     /**
@@ -194,8 +193,6 @@ class Storage
         }
 
         return ['return' => true, 'response' => 'Pomyślnie usunięto'];
-
-
     }
 
     /**
@@ -229,7 +226,6 @@ class Storage
             $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
             $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
             fclose($stream);
-
         } catch (\Exception $e) {
             return ['return' => false, 'response' => $e->getMessage()];
         }
@@ -240,6 +236,5 @@ class Storage
 
         $get = $this->driver->get($adapter, $pathImage);
         return ['return' => true, 'fileId' => $get['file_id']];
-
     }
 }
