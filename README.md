@@ -3,7 +3,7 @@ Dframe/FileStorage
 
 [![Build Status](https://travis-ci.org/dframe/fileStorage.svg?branch=master)](https://travis-ci.org/dframe/fileStorage) [![Latest Stable Version](https://poser.pugx.org/dframe/fileStorage/v/stable)](https://packagist.org/packages/dframe/fileStorage) [![Total Downloads](https://poser.pugx.org/dframe/fileStorage/downloads)](https://packagist.org/packages/dframe/fileStorage) [![Latest Unstable Version](https://poser.pugx.org/dframe/fileStorage/v/unstable)](https://packagist.org/packages/dframe/fileStorage) [![License](https://poser.pugx.org/dframe/fileStorage/license)](https://packagist.org/packages/dframe/fileStorage)
 
-File system which allow you to store and style images
+[Flysystem](https://github.com/thephpleague/flysystem) wrapper which allow you to storage file and styling images
 
 ## Preview
 [![License](https://github.com/dframe/fileStorage/blob/master/preview.jpg)](https://github.com/dframe/fileStorage/blob/master/preview.jpg)
