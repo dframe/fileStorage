@@ -237,4 +237,40 @@ class Storage
         $get = $this->driver->get($adapter, $pathImage);
         return ['return' => true, 'fileId' => $get['file_id']];
     }
+
+    /**
+     * @param array $filename
+     * @param array $ext
+     *
+     * @return bool
+     */
+    public function isAllowedFileType($file, $extensions)
+    {
+
+        /**
+         * Get $filename extension
+         */
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        /**
+         * Get $filename mine
+         */
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $file['tmp_name']);  //Walidacja Mine
+        finfo_close($finfo);
+
+        if (isset($extensions[$extension])) {
+
+            if (!is_array($extensions[$extension])) {
+                $extensions[$extension] = [$extensions[$extension]];
+            }
+
+            if (in_array($mime, $extensions[$extension])) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
 }
