@@ -39,7 +39,6 @@ class FileTest extends TestCase
 
     public function testHas()
     {
-
         $this->assertTrue($this->Storage->getManager()->has('local://file.txt'));
     }
 
@@ -48,5 +47,4 @@ class FileTest extends TestCase
         $put = $this->Storage->put('local', __DIR__ . '/file.txt', 'files/file.txt');
         $this->assertTrue($put['return']);
     }
-
 }
