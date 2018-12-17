@@ -201,8 +201,8 @@ class Image
                 }
 
                 if (!empty($this->storage)) {
-                    if (!empty($this->storage->getDriver())) {
-                        $this->storage->getDriver()
+                    if (!empty($this->driver)) {
+                        $this->driver
                             ->cache($adapter, $originalImage, $cache, $mimetype, $readStream);
                     }
                     $this->manager->putStream($cacheAdapter, $readStream);
@@ -210,8 +210,8 @@ class Image
                     return false;
                 }
             } elseif (!empty($this->defaultImage)) {
-                if (!empty($this->storage->getDriver())) {
-                    $get = $this->storage->getDriver()
+                if (!empty($this->driver)) {
+                    $get = $this->driver
                         ->get($adapter, $originalImage, true);
                     if ($get['return'] == true) {
                         foreach ($get['cache'] as $key => $value) {
@@ -219,7 +219,7 @@ class Image
                                 $this->manager->delete('cache://' . $value['file_cache_path']);
                             }
                         }
-                        //$this->storage->getDriver()->drop($originalImage);
+                        //$this->driver->drop($originalImage);
                     }
                 }
 
@@ -263,8 +263,8 @@ class Image
     {
         $data = $this->cache($adapter, $this->originalImage);
 
-        if (!empty($this->storage->getDriver()) and $data === true) {
-            $get = $this->storage->getDriver()
+        if (!empty($this->driver) and $data === true) {
+            $get = $this->driver
                 ->get($adapter, $this->originalImage, $data['cache']);
             if ($get['return'] === true) {
                 $data['data'] = $get['cache'];
