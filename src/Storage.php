@@ -148,6 +148,13 @@ class Storage
     }
 
     /**
+     * @return MountManager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+    /**
      * @return array
      */
     public function getConfig($key = null)
