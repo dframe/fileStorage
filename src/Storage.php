@@ -267,7 +267,6 @@ class Storage
         finfo_close($finfo);
 
         if (isset($extensions[$extension])) {
-
             if (!is_array($extensions[$extension])) {
                 $extensions[$extension] = [$extensions[$extension]];
             }
@@ -275,7 +274,6 @@ class Storage
             if (in_array($mime, $extensions[$extension])) {
                 return true;
             }
-
         }
 
         return false;

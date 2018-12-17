@@ -1,3 +1,6 @@
 <?php
-$autoloader = include dirname(__DIR__) . '/vendor/autoload.php';
-$autoloader->addPsr4('Dframe\\FileStorage\\tests\\', __DIR__);
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+define('APP_NAME', 'Dframe');
+define('APP_DIR', __DIR__.'/');
