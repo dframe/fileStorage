@@ -71,10 +71,8 @@ class Image
     /**
      * Image constructor.
      *
+     * @param                             $driver
      * @param                             $config
-     * @param                             $image
-     * @param bool                        $default
-     * @param \Dframe\FileStorage\Storage $storage
      */
     public function __construct($driver, $config)
     {
@@ -256,6 +254,7 @@ class Image
 
     /**
      * @param string $adapter
+     * @param bool   $data
      *
      * @return array
      */

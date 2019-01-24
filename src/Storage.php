@@ -154,7 +154,10 @@ class Storage
     {
         return $this->manager;
     }
+
     /**
+     * @param null $key
+     *
      * @return array
      */
     public function getConfig($key = null)
@@ -246,8 +249,8 @@ class Storage
     }
 
     /**
-     * @param array $filename
-     * @param array $ext
+     * @param $file
+     * @param $extensions
      *
      * @return bool
      */
