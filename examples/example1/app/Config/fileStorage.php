@@ -74,7 +74,7 @@ return [
     'cache' => [
         'life' => 600 // in seconds
     ],
-    'public_urls' => [
+    'publicUrls' => [
         'local' => ''
     ]
 ];
