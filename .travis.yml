@@ -4,7 +4,6 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  - 7.4
   
 # We don't want to run linux commands as super user
 sudo: false
