@@ -10,6 +10,8 @@
 namespace Dframe\FileStorage;
 
 use Dframe\Config;
+use Dframe\FileStorage\Exceptions\FileExistException;
+use Dframe\FileStorage\Exceptions\FileNotFoundException;
 use Dframe\Router;
 use Dframe\Router\Response;
 use League\Flysystem\MountManager;
@@ -107,7 +109,7 @@ class Storage
             $contents = stream_get_contents($stream);
             fclose($stream);
         } else {
-            return false;
+           throw new FileNotFoundException();
         }
 
         return $this->router->makeUrl('filestorage/file') . '?file=' . $file;
@@ -179,7 +181,7 @@ class Storage
     {
         $get = $this->driver->get($adapter, $file, true);
         if ($get['return'] !== true) {
-            return ['return' => false, 'response' => 'Brak pliku'];
+            throw new FileNotFoundException();
         }
 
         /**
@@ -199,7 +201,7 @@ class Storage
 
         $drop = $this->driver->drop($adapter, $file);
         if ($drop['return'] !== true) {
-            return ['return' => false, 'response' => $drop['response']];
+            throw new \Exception($drop['response']);
         }
 
         return ['return' => true, 'response' => 'Pomyślnie usunięto'];
@@ -215,14 +217,14 @@ class Storage
      */
     public function put($adapter, $tmpName, $pathImage, $forced = false)
     {
-        try {
+
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime = finfo_file($finfo, $tmpName);
             finfo_close($finfo);
 
             if ($this->manager->has($adapter . '://' . $pathImage)) {
                 if ($forced == false) {
-                    throw new \Exception('File already Exist');
+                    throw new FileExistException();
                 }
 
                 $this->manager->delete($adapter . '://' . $pathImage);
@@ -236,9 +238,7 @@ class Storage
             $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
             $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
             fclose($stream);
-        } catch (\Exception $e) {
-            return ['return' => false, 'response' => $e->getMessage()];
-        }
+
 
         if ($put['return'] != false) {
             return ['return' => true, 'fileId' => $put['lastInsertId']];
