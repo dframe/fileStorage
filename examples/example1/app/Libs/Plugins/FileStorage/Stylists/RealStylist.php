@@ -1,6 +1,9 @@
 <?php
+
 namespace Libs\Plugins\FileStorage\Stylists;
 
+use Dframe\FileStorage\Stylist;
+use Exception;
 use Imagecraft\ImageBuilder;
 
 /*
@@ -12,7 +15,7 @@ use Imagecraft\ImageBuilder;
  *
  * @package Libs\Plugins\FileStorage\Stylists
  */
-class RealStylist extends \Dframe\FileStorage\Stylist
+class RealStylist extends Stylist
 {
     /**
      * @param resource $originStream
@@ -31,25 +34,25 @@ class RealStylist extends \Dframe\FileStorage\Stylist
         $layer = $builder->addBackgroundLayer();
         $contents = stream_get_contents($originStream);
         $layer->contents($contents);
-        
-        
+
+
         if (isset($stylistParam['size'])) {
             $size = $stylistParam['size'];
         } else {
             $size = '100';
         }
-        
+
         $layer->resize($size, $size, 'shrink');
-        
+
         fclose($originStream);
-        
+
         $image = $builder->save();
-        
+
         $tmpFile = tmpfile();
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
         } else {
-            throw new \Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
+            throw new Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
         }
 
         rewind($tmpFile);
@@ -69,6 +72,6 @@ class RealStylist extends \Dframe\FileStorage\Stylist
             $size = '100';
         }
 
-        return 'realStylist-'.$size;
+        return 'realStylist-' . $size;
     }
 }

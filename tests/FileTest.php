@@ -3,6 +3,8 @@
 namespace Dframe\FileStorage\Tests;
 
 use Dframe\FileStorage\Storage;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 
@@ -20,10 +22,10 @@ class FileTest extends TestCase
     public function setUp()
     {
         clearstatcache();
-        $fs = new \League\Flysystem\Adapter\Local(__DIR__ . '/');
+        $fs = new Local(__DIR__ . '/');
         $fs->deleteDir('files');
-        $fs->createDir('files', new \League\Flysystem\Config());
-        $fs->write('file.txt', 'contents', new \League\Flysystem\Config());
+        $fs->createDir('files', new Config());
+        $fs->write('file.txt', 'contents', new Config());
         $local = new Filesystem($fs);
 
         $driver = new FakeDriver();

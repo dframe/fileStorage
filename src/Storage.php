@@ -14,6 +14,7 @@ use Dframe\FileStorage\Exceptions\FileExistException;
 use Dframe\FileStorage\Exceptions\FileNotFoundException;
 use Dframe\Router;
 use Dframe\Router\Response;
+use Exception;
 use League\Flysystem\MountManager;
 
 /**
@@ -103,13 +104,12 @@ class Storage
     {
         $sourceAdapter = 'local://' . $file;
         if ($this->manager->has($sourceAdapter)) {
-
             // Retrieve a read-stream
             $stream = $this->manager->readStream($sourceAdapter);
             $contents = stream_get_contents($stream);
             fclose($stream);
         } else {
-           throw new FileNotFoundException();
+            throw new FileNotFoundException();
         }
 
         return $this->router->makeUrl('filestorage/file') . '?file=' . $file;
@@ -201,7 +201,7 @@ class Storage
 
         $drop = $this->driver->drop($adapter, $file);
         if ($drop['return'] !== true) {
-            throw new \Exception($drop['response']);
+            throw new Exception($drop['response']);
         }
 
         return ['return' => true, 'response' => 'Pomyślnie usunięto'];
@@ -217,27 +217,26 @@ class Storage
      */
     public function put($adapter, $tmpName, $pathImage, $forced = false)
     {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $tmpName);
+        finfo_close($finfo);
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mime = finfo_file($finfo, $tmpName);
-            finfo_close($finfo);
-
-            if ($this->manager->has($adapter . '://' . $pathImage)) {
-                if ($forced == false) {
-                    throw new FileExistException();
-                }
-
-                $this->manager->delete($adapter . '://' . $pathImage);
+        if ($this->manager->has($adapter . '://' . $pathImage)) {
+            if ($forced == false) {
+                throw new FileExistException();
             }
 
-            $stream = fopen($tmpName, 'r+');
-            if (!$stream) {
-                throw new \Exception('Failed to open uploaded file');
-            }
+            $this->manager->delete($adapter . '://' . $pathImage);
+        }
 
-            $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
-            $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
-            fclose($stream);
+        $stream = fopen($tmpName, 'r+');
+        if (!$stream) {
+            throw new Exception('Failed to open uploaded file');
+        }
+
+        $this->manager->writeStream($adapter . '://' . $pathImage, $stream);
+        $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
+        fclose($stream);
 
 
         if ($put['return'] != false) {
@@ -256,7 +255,6 @@ class Storage
      */
     public function isAllowedFileType($file, $extensions)
     {
-
         /**
          * Get $filename extension
          */

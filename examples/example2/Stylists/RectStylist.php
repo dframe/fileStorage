@@ -1,5 +1,6 @@
 <?php
 
+use Dframe\FileStorage\Stylist;
 use Imagecraft\ImageBuilder;
 
 /*
@@ -12,7 +13,7 @@ use Imagecraft\ImageBuilder;
 /**
  * Class RectStylist
  */
-class RectStylist extends \Dframe\FileStorage\Stylist
+class RectStylist extends Stylist
 {
     /**
      * @param resource $originStream
@@ -48,7 +49,7 @@ class RectStylist extends \Dframe\FileStorage\Stylist
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
         } else {
-            throw new \Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
+            throw new Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
         }
 
         rewind($tmpFile);

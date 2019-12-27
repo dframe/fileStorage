@@ -1,14 +1,17 @@
 <?php
+
 namespace Model\FileStorage\Drivers;
 
 use Dframe\FileStorage\Drivers\DatabaseDriverInterface;
+use Exception;
+use Model\Model;
 
 /**
  * Class DatabaseDriverModel
  *
  * @package Model\FileStorage\Drivers
  */
-class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterface
+class DatabaseDriverModel extends Model implements DatabaseDriverInterface
 {
     /**
      * @param      $adapter
@@ -54,7 +57,10 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
             return $this->methodResult(false, ['response' => 'Taki obraz już istnieje']);
         }
 
-        $getLastInsertId = $this->db->pdoQuery('INSERT INTO `files` (`file_adapter`, `file_path`, `file_mime`) VALUES (?,?,?)', [$adapter, $path, $mime])->getLastInsertId();
+        $getLastInsertId = $this->db->pdoQuery(
+            'INSERT INTO `files` (`file_adapter`, `file_path`, `file_mime`) VALUES (?,?,?)',
+            [$adapter, $path, $mime]
+        )->getLastInsertId();
         return $this->methodResult(true, ['lastInsertId' => $getLastInsertId]);
     }
 
@@ -111,7 +117,7 @@ class DatabaseDriverModel extends \Model\Model implements DatabaseDriverInterfac
             $affectedRows = $this->db->delete('files', ['file_id' => $row['file_id']])->affectedRows();
 
             $this->db->end();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->db->back();
             return $this->methodResult(false, ['response' => $e->getMessages()]);
         }

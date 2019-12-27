@@ -9,6 +9,8 @@
 
 namespace Dframe\FileStorage\Stylist;
 
+use Dframe\FileStorage\Stylist;
+use Exception;
 use Imagecraft\ImageBuilder;
 
 /**
@@ -17,7 +19,7 @@ use Imagecraft\ImageBuilder;
  *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
-class SimpleStylist extends \Dframe\FileStorage\Stylist
+class SimpleStylist extends Stylist
 {
     /**
      * @param resource $originStream
@@ -45,7 +47,7 @@ class SimpleStylist extends \Dframe\FileStorage\Stylist
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
         } else {
-            throw new \Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
+            throw new Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
         }
 
         rewind($tmpFile);

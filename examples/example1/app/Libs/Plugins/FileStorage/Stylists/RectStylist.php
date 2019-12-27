@@ -1,6 +1,9 @@
 <?php
+
 namespace Libs\Plugins\FileStorage\Stylists;
 
+use Dframe\FileStorage\Stylist;
+use Exception;
 use Imagecraft\ImageBuilder;
 
 /*
@@ -15,7 +18,7 @@ use Imagecraft\ImageBuilder;
  *
  * @package Libs\Plugins\FileStorage\Stylists
  */
-class RectStylist extends \Dframe\FileStorage\Stylist
+class RectStylist extends Stylist
 {
     /**
      * @param resource $originStream
@@ -35,16 +38,16 @@ class RectStylist extends \Dframe\FileStorage\Stylist
         $contents = stream_get_contents($originStream);
         $layer->contents($contents);
         $layer->resize($stylistParam['w'], $stylistParam['h'], 'fill_crop');
-        
+
         fclose($originStream);
-        
+
         $image = $builder->save();
-        
+
         $tmpFile = tmpfile();
         if ($image->isValid()) {
             fwrite($tmpFile, $image->getContents());
         } else {
-            throw new \Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
+            throw new Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
         }
 
         rewind($tmpFile);
@@ -58,6 +61,6 @@ class RectStylist extends \Dframe\FileStorage\Stylist
      */
     public function identify($stylistParam)
     {
-        return 'rectStylist-'.$stylistParam['w'].'-'.$stylistParam['h'];
+        return 'rectStylist-' . $stylistParam['w'] . '-' . $stylistParam['h'];
     }
 }

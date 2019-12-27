@@ -5,7 +5,6 @@ namespace Libs\Plugins\FileStorage;
 /**
  * Example Class
  */
-
 class MetadataFile
 {
     /**
@@ -16,7 +15,6 @@ class MetadataFile
      */
     public function __construct($mime, $stream)
     {
-
         //$putStream = tmpfile();
         //fwrite($putStream, stream_get_contents($readStream));
         //rewind($putStream);

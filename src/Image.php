@@ -10,8 +10,10 @@
 namespace Dframe\FileStorage;
 
 use Dframe\Config;
+use Dframe\FileStorage\Stylist\SimpleStylist;
 use Dframe\Router;
 use Dframe\Router\Response;
+use Exception;
 use League\Flysystem\MountManager;
 
 /**
@@ -30,7 +32,7 @@ class Image
      * @var array
      */
     public $stylists = [
-        'original' => \Dframe\FileStorage\Stylist\SimpleStylist::class
+        'original' => SimpleStylist::class
     ];
 
     /**
@@ -183,7 +185,9 @@ class Image
         $sourceAdapter = $adapter . '://' . $originalImage;
 
         $has = $this->manager->has($cacheAdapter);
-        if ($has == false or ($has == true and $this->manager->getTimestamp($cacheAdapter) < strtotime("-" . $this->cache['life'] . " seconds"))) {
+        if ($has == false or ($has == true and $this->manager->getTimestamp($cacheAdapter) < strtotime(
+                    "-" . $this->cache['life'] . " seconds"
+                ))) {
             if ($has == true) { // zrobić update zamiast delete
                 $this->manager->delete($cacheAdapter);
             }
@@ -238,7 +242,7 @@ class Image
      * Zwraca obiekt stylisty o wskazanej nazwie
      * Tylko do uzytku wewnatrz klasy!
      *
-     * @param  string $stylist
+     * @param string $stylist
      *
      * @return \Dframe\FileStorage\Stylist
      */
@@ -246,7 +250,7 @@ class Image
     {
         $className = $this->stylists[$stylist];
         if (!class_exists($className) or !method_exists($className, 'stylize')) {
-            throw new \Exception('Requested stylist "' . $stylist . '" was not found or is incorrect');
+            throw new Exception('Requested stylist "' . $stylist . '" was not found or is incorrect');
         }
 
         return new $className();

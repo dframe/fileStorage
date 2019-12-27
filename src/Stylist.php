@@ -39,7 +39,7 @@ abstract class Stylist
     /**
      * Zwraca unikalna nazwe stylisty, takze w zaleznosci od parametrow
      *
-     * @param  array
+     * @param array
      *
      * @return string
      */
