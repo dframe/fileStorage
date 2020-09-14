@@ -9,10 +9,10 @@
 
 namespace Dframe\FileStorage;
 
-use Dframe\Config;
+use Dframe\Config\Config;
 use Dframe\FileStorage\Stylist\SimpleStylist;
-use Dframe\Router;
 use Dframe\Router\Response;
+use Dframe\Router\Router;
 use Exception;
 use League\Flysystem\MountManager;
 
