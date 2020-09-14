@@ -24,7 +24,6 @@ namespace Dframe\FileStorage;
  */
 abstract class Stylist
 {
-
     /**
      * Pobiera oryginal i zwraca w przetworzonej formie. Dane wejsciowe to reource obrazu dla biblioteki
      * PHP GD, a wyjscie to resource z przetworzonym obrazem
