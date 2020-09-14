@@ -28,7 +28,7 @@ class SimpleStylist extends Stylist
      * @param bool     $stylistParam
      *
      * @return bool|resource
-     * @throws \Exception
+     * @throws Exception
      */
     public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
     {

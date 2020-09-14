@@ -46,7 +46,7 @@ class Image
     protected $defaultImage;
 
     /**
-     * @var \Dframe\FileStorage\Storage
+     * @var Storage
      */
     protected $storage;
 
@@ -244,7 +244,7 @@ class Image
      *
      * @param string $stylist
      *
-     * @return \Dframe\FileStorage\Stylist
+     * @return Stylist
      */
     protected function getStylist($stylist = 'orginal')
     {

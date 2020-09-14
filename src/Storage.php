@@ -10,6 +10,7 @@
 namespace Dframe\FileStorage;
 
 use Dframe\Config\Config;
+use Dframe\FileStorage\Drivers\DatabaseDriverInterface;
 use Dframe\FileStorage\Exceptions\FileExistException;
 use Dframe\FileStorage\Exceptions\FileNotFoundException;
 use Dframe\Router\Response;
@@ -52,7 +53,7 @@ class Storage
     /**
      * Storage constructor.
      *
-     * @param \Dframe\FileStorage\Drivers\DatabaseDriverInterface $driver
+     * @param DatabaseDriverInterface $driver
      * @param null                                                $config
      * @param bool                                                $router
      */
