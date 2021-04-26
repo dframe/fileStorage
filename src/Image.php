@@ -138,7 +138,7 @@ class Image
     public function display($adapter = 'local')
     {
         $get = $this->cache($adapter, $this->originalImage);
-        return (new Router())->makeUrl('filestorage/images/:params?params=' . $get['cache']);
+        return ((new Router())->boot())->makeUrl('filestorage/images/:params?params=' . $get['cache']);
     }
 
     /**
