@@ -42,7 +42,7 @@ $images[] = [
     'size' => 'Rect 250x550',
     'img' => $Storage->image('picture1.jpg')->stylist('Rect')->size('250x550')->get()
 ];
-$images[] = ['size' => 'Original', 'img' => $Storage->image('picture1.jpg')->stylist('Orginal')->get()];
+$images[] = ['size' => 'Original', 'img' => $Storage->image('picture1.jpg')->stylist('Original')->get()];
 
 ?>
 

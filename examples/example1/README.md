@@ -43,7 +43,7 @@ class MyFileSystem extends \Dframe\Controller
         $this->FileStorage = new \Dframe\FileStorage\Storage($Driver, $Config->get());
         $this->FileStorage->settings([
             'stylists' => [
-                'Orginal' => \Libs\Plugins\FileStorage\Stylist\OrginalStylist::class,
+                'Original' => \Libs\Plugins\FileStorage\Stylist\OriginalStylist::class,
                 'Real' => \Libs\Plugins\FileStorage\Stylist\RealStylist::class,
                 'RectStylist' => \Libs\Plugins\FileStorage\Stylist\RectStylist::class,
                 'SquareStylist' => \Libs\Plugins\FileStorage\Stylist\SquareStylist::class
