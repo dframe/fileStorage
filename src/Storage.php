@@ -9,12 +9,9 @@
 
 namespace Dframe\FileStorage;
 
-use Dframe\Config\Config;
 use Dframe\FileStorage\Drivers\DatabaseDriverInterface;
 use Dframe\FileStorage\Exceptions\FileExistException;
 use Dframe\FileStorage\Exceptions\FileNotFoundException;
-use Dframe\Router\Response;
-use Dframe\Router\Router;
 use Exception;
 use League\Flysystem\MountManager;
 
@@ -31,17 +28,7 @@ class Storage
     protected $manager;
 
     /**
-     * @var Router
-     */
-    protected $router;
-
-    /**
-     * @var null
-     */
-    protected $driver;
-
-    /**
-     * @var
+     * @var array
      */
     protected $settings;
 
@@ -54,37 +41,29 @@ class Storage
      * Storage constructor.
      *
      * @param DatabaseDriverInterface $driver
-     * @param null                                                $config
-     * @param bool                                                $router
+     * @param null $config
      */
-    public function __construct($driver = null, $config = null, $router = true)
+    public function __construct($driver = null, $config = null)
     {
         $this->driver = $driver;
-
-        if (is_null($config)) {
-            $configFileStorage = Config::load('fileStorage');
-            $adapters = $configFileStorage->get('adapters', []);
-        } else {
-            $adapters = $config['adapters'];
-        }
+        $adapters = $config['adapters'] ?? [];
 
         $this->config = $config;
         $this->manager = new MountManager($adapters);
-        if ($router === true) {
-            $this->router = new Router();
-        }
     }
 
+
     /**
-     * @param      $image
-     * @param bool $default
+     * @param $adapter
+     * @param $image
+     * @param false $default
      *
      * @return Image
      */
-    public function image($image, $default = false)
+    public function image($adapter, $path, $default = false)
     {
         $Image = new Image($this->driver, $this->config);
-        $Image->setImage($image, $default)->addStylist($this->settings['stylists']);
+        $Image->setImage($adapter, $path, $default)->addStylist($this->settings['stylists']);
         return $Image;
     }
 
@@ -101,46 +80,38 @@ class Storage
      *
      * @return bool|string
      */
-    public function getFile($file)
+    public function getFile($file, $storage = 'local')
     {
-        $sourceAdapter = 'local://' . $file;
+        $sourceAdapter = $storage . '://' . $file;
         if ($this->manager->has($sourceAdapter)) {
-            // Retrieve a read-stream
-            $stream = $this->manager->readStream($sourceAdapter);
-            $contents = stream_get_contents($stream);
-            fclose($stream);
+            return $file;
         } else {
             throw new FileNotFoundException();
         }
-
-        return $this->router->makeUrl('filestorage/file') . '?file=' . $file;
     }
 
-    /**
-     * @param        $file
-     * @param string $adapter
-     *
-     * @return Response
-     */
-    public function renderFile($file, $adapter = 'local')
-    {
-        $fileAdapter = $adapter . '://' . $file;
-        // Retrieve a read-stream
-        if (!$this->manager->has($fileAdapter)) {
-            $body = "<h1>404 Not Found</h1> \n\r" . "The page that you have requested could not be found.";
-
-            return Response::render($body)
-                ->status(404);
-        }
-
-        $getMimetype = $this->manager->getMimetype($fileAdapter);
-        $stream = $this->manager->readStream($fileAdapter);
-        $contents = stream_get_contents($stream);
-        fclose($stream);
-
-        return Response::render($contents)
-            ->headers(['Content-type' => $getMimetype]);
-    }
+//    /**
+//     * @param        $file
+//     * @param string $adapter
+//     *
+//     * @return Response
+//     */
+//    public function renderFile($file, $adapter = 'local')
+//    {
+//        $fileAdapter = $adapter . '://' . $file;
+//        // Retrieve a read-stream
+//        if (!$this->manager->has($fileAdapter)) {
+//            throw new FileNotFoundException();
+//        }
+//
+//        $getMimetype = $this->manager->getMimetype($fileAdapter);
+//        $stream = $this->manager->readStream($fileAdapter);
+//        $contents = stream_get_contents($stream);
+//        fclose($stream);
+//
+//        return Response::render($contents)
+//            ->headers(['Content-type' => $getMimetype]);
+//    }
 
     /**
      * @return Drivers\DatabaseDriverInterface|null
@@ -176,7 +147,7 @@ class Storage
      * @param $adapter
      * @param $file
      *
-     * @return array
+     * @return true
      */
     public function drop($adapter, $file)
     {
@@ -205,7 +176,7 @@ class Storage
             throw new Exception($drop['response']);
         }
 
-        return ['return' => true, 'response' => 'Pomyślnie usunięto'];
+        return true;
     }
 
     /**
@@ -241,11 +212,11 @@ class Storage
 
 
         if ($put['return'] != false) {
-            return ['return' => true, 'fileId' => $put['lastInsertId']];
+            return ['fileId' => $put['lastInsertId']];
         }
 
         $get = $this->driver->get($adapter, $pathImage);
-        return ['return' => true, 'fileId' => $get['file_id']];
+        return ['fileId' => $get['file_id']];
     }
 
     /**
@@ -254,7 +225,7 @@ class Storage
      *
      * @return bool
      */
-    public function isAllowedFileType($file, $extensions)
+    public function isAllowedFile($file, array $allowedTypes, array $allowedExtensions)
     {
         /**
          * Get $filename extension
@@ -268,16 +239,10 @@ class Storage
         $mime = finfo_file($finfo, $file['tmp_name']);  //Walidacja Mine
         finfo_close($finfo);
 
-        if (isset($extensions[$extension])) {
-            if (!is_array($extensions[$extension])) {
-                $extensions[$extension] = [$extensions[$extension]];
-            }
-
-            if (in_array($mime, $extensions[$extension])) {
-                return true;
-            }
+        if (!in_array($mime, $allowedTypes) or !in_array($extension, $allowedExtensions)) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 }

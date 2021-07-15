@@ -9,10 +9,7 @@
 
 namespace Dframe\FileStorage;
 
-use Dframe\Config\Config;
 use Dframe\FileStorage\Stylist\SimpleStylist;
-use Dframe\Router\Response;
-use Dframe\Router\Router;
 use Exception;
 use League\Flysystem\MountManager;
 
@@ -51,11 +48,6 @@ class Image
     protected $storage;
 
     /**
-     * @var Router
-     */
-    protected $router;
-
-    /**
      * @var mixed|null
      */
     protected $cache;
@@ -71,6 +63,11 @@ class Image
     protected $originalImage;
 
     /**
+     * @var string
+     */
+    protected $adapter;
+
+    /**
      * Image constructor.
      *
      * @param                             $driver
@@ -78,18 +75,13 @@ class Image
      */
     public function __construct($driver, $config)
     {
-        if (is_null($config)) {
-            $ConfigFileStorage = Config::load('fileStorage');
-            $adapters = $ConfigFileStorage->get('adapters', []);
-            $cache = $ConfigFileStorage->get('cache', ['life' => 600]);
-        } else {
-            $adapters = $config['adapters'];
-            $cache = $config['cache'] ?? ['life' => 600];
-        }
+        $this->config = $config;
+        $adapters = $config['adapters'];
+        $cache = $config['cache'] ?? ['life' => 600];
 
         $this->cache = $cache;
         $this->manager = new MountManager($adapters);
-        $this->storage = $driver;
+        $this->driver = $driver;
     }
 
     /**
@@ -98,8 +90,9 @@ class Image
      *
      * @return $this
      */
-    public function setImage($image, $default = false)
+    public function setImage($adapter, $image, $default = false)
     {
+        $this->adapter = $adapter;
         $this->originalImage = $image;
         $this->defaultImage = $default;
 
@@ -137,8 +130,37 @@ class Image
      */
     public function display($adapter = 'local')
     {
-        $get = $this->cache($adapter, $this->originalImage);
-        return (new Router())->makeUrl('filestorage/images/:params?params=' . $get['cache']);
+        return $this->cache($adapter, $this->originalImage);
+    }
+
+    protected function createCachePath($originalImage, $output = [])
+    {
+        /**
+         * Get extension
+         */
+        $ext = pathinfo($originalImage, PATHINFO_EXTENSION);
+
+        $stylist = $output['stylist'];
+
+        if (isset($output['size']) and !empty($output['size'])) {
+            $stylist .= '-' . $this->size;
+        }
+        /**
+         * Create Static cache path based on $originalImage
+         */
+        $cachePath = [];
+        $cachePath[0] = substr(md5($originalImage), 0, 6);
+        $cachePath[1] = substr(md5($originalImage), 6, 6);
+        $cachePath[2] = substr(md5($stylist . '+' . $originalImage), 0, 6);
+        $cachePath[3] = $stylist;
+
+        $basename = basename($originalImage, '.' . $ext);
+        if (!empty($basename)) {
+            $basename = $basename . '-';
+        }
+        $cache = $basename . '-' . $cachePath[0] . '-' . $cachePath[1] . '-' . $cachePath[2] . '-' . $cachePath[3] . '.' . $ext;
+
+        return str_replace($basename, rtrim($originalImage, '.' . $ext), $cache);
     }
 
     /**
@@ -154,47 +176,23 @@ class Image
         $output['stylist'] = $this->stylist;
         $output['size'] = $this->size;
 
-        /**
-         * Get extension
-         */
-        $ext = pathinfo($originalImage, PATHINFO_EXTENSION);
-
-        $stylist = $output['stylist'];
-
-        if (isset($output['size']) and !empty($output['size'])) {
-            $stylist .= '-' . $this->size;
-        }
-
-        /**
-         * Create Static cache path based on $originalImage
-         */
-        $cachePath = [];
-        $cachePath[0] = substr(md5($originalImage), 0, 6);
-        $cachePath[1] = substr(md5($originalImage), 6, 6);
-        $cachePath[2] = substr(md5($stylist . '+' . $originalImage), 0, 6);
-        $cachePath[3] = $stylist;
-
-        $basename = basename($originalImage, '.' . $ext);
-        if (!empty($basename)) {
-            $basename = $basename . '-';
-        }
-        $cache = $basename . $cachePath[0] . '-' . $cachePath[1] . '-' . $cachePath[2] . '-' . $cachePath[3] . '.' . $ext;
-        $cache = str_replace($basename, rtrim($originalImage, '.' . $ext), $cache);
+        $cache = $this->createCachePath($originalImage, $output);
 
         $cacheAdapter = 'cache://' . $cache;
         $sourceAdapter = $adapter . '://' . $originalImage;
 
         $has = $this->manager->has($cacheAdapter);
-        if ($has == false or ($has == true and $this->manager->getTimestamp($cacheAdapter) < strtotime(
-            "-" . $this->cache['life'] . " seconds"
-        ))) {
-            if ($has == true) { // zrobić update zamiast delete
+        if ($has == false
+            or ($has == true and $this->manager->getTimestamp($cacheAdapter) < strtotime(
+                    "-" . $this->cache['life'] . " seconds"
+                ))) {
+            /** @todo: Rewrite to update */
+            if ($has == true) {
                 $this->manager->delete($cacheAdapter);
             }
 
             if ($this->manager->has($sourceAdapter)) {
                 $mimetype = $this->manager->getMimetype($sourceAdapter);
-
                 $readStream = $this->manager->readStream($sourceAdapter);
 
                 if (!empty($output)) {
@@ -202,19 +200,14 @@ class Image
                     $readStream = $getStylist->stylize($readStream, null, $getStylist, $output);
                 }
 
-                if (!empty($this->storage)) {
-                    if (!empty($this->driver)) {
-                        $this->driver
-                            ->cache($adapter, $originalImage, $cache, $mimetype, $readStream);
-                    }
-                    $this->manager->putStream($cacheAdapter, $readStream);
-                } else {
-                    return false;
+                if (!empty($this->driver)) {
+                    $this->driver->cache($adapter, $originalImage, $cache, $mimetype, $readStream);
                 }
+
+                $this->manager->putStream($cacheAdapter, $readStream);
             } elseif (!empty($this->defaultImage)) {
                 if (!empty($this->driver)) {
-                    $get = $this->driver
-                        ->get($adapter, $originalImage, true);
+                    $get = $this->driver->get($adapter, $originalImage, true);
                     if ($get['return'] == true) {
                         foreach ($get['cache'] as $key => $value) {
                             if ($this->manager->has('cache://' . $value['file_cache_path'])) {
@@ -234,6 +227,7 @@ class Image
         $this->cache = $cache;
 
         return [
+            'default' => $default,
             'cache' => $cache
         ];
     }
@@ -262,13 +256,12 @@ class Image
      *
      * @return array
      */
-    public function get($adapter = 'local', $data = false)
+    public function get($data = false)
     {
-        $data = $this->cache($adapter, $this->originalImage);
+        $data = $this->cache($this->adapter, $this->originalImage);
 
         if (!empty($this->driver) and $data === true) {
-            $get = $this->driver
-                ->get($adapter, $this->originalImage, $data['cache']);
+            $get = $this->driver->get($this->adapter, $this->originalImage, $data['cache']);
             if ($get['return'] === true) {
                 $data['data'] = $get['cache'];
             }
@@ -277,30 +270,10 @@ class Image
         return $data;
     }
 
-    /**
-     * @param        $file
-     * @param string $adapter
-     *
-     * @return mixed
-     */
-    public function renderFile($file, $adapter = 'local')
+    public function getUrl()
     {
-        $fileAdapter = $adapter . '://' . $file;
-        // Retrieve a read-stream
-        if (!$this->manager->has($fileAdapter)) {
-            $body = "<h1>404 Not Found</h1> \n\r" . "The page that you have requested could not be found.";
-
-            return Response::render($body)
-                ->status(404);
-        }
-
-        $getMimetype = $this->manager->getMimetype($fileAdapter);
-        $stream = $this->manager->readStream($fileAdapter);
-        $contents = stream_get_contents($stream);
-        fclose($stream);
-
-        return Response::render($contents)
-            ->headers(['Content-type' => $getMimetype]);
+        $cache = $this->cache($this->adapter, $this->originalImage);
+        return $this->config['publicUrls']['cache'] . $cache['cache'];
     }
 
     /**
