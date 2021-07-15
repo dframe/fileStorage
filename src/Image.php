@@ -184,8 +184,8 @@ class Image
         $has = $this->manager->has($cacheAdapter);
         if ($has == false
             or ($has == true and $this->manager->getTimestamp($cacheAdapter) < strtotime(
-                    "-" . $this->cache['life'] . " seconds"
-                ))) {
+                "-" . $this->cache['life'] . " seconds"
+            ))) {
             /** @todo: Rewrite to update */
             if ($has == true) {
                 $this->manager->delete($cacheAdapter);
