@@ -13,14 +13,14 @@
     "homepage": "https://dframeframework.com",
     "license": "MIT",
     "require": {
-        "league/flysystem": "^1.0",
-        "dframe/dframe": "*",
+        "league/flysystem": "^1.1.4",
         "coldume/imagecraft": "^1.0",
-        "league/flysystem-cached-adapter": "^1.0",
-        "ext-fileinfo": "*"
+        "ext-fileinfo": "*",
+        "league/flysystem-cached-adapter": "^1.1"
     },
-    
+
     "require-dev": {
+        "dframe/dframe": "*",
         "phpunit/phpunit": "^5.7.10"
     },
     "suggest": {
