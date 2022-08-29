@@ -223,13 +223,15 @@ class Storage
     /**
      * Get $filename mine
      */
-    public function getFileMine($file){
+    public function getFileMine($file)
+    {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $file['tmp_name']);  //Walidacja Mine
         finfo_close($finfo);
 
         return $mime;
     }
+
     /**
      * @param $file
      * @param $extensions
