@@ -15,6 +15,8 @@ use Dframe\FileStorage\Exceptions\FileNotFoundException;
 use Exception;
 use League\Flysystem\MountManager;
 
+use function json_encode;
+
 /**
  * Storage Class
  *
@@ -194,8 +196,8 @@ class Storage
         finfo_close($finfo);
 
         if ($this->manager->has($adapter . '://' . $pathImage)) {
-            if ($forced == false) {
-                throw new FileExistException();
+            if ($forced === false) {
+                throw new FileExistException(json_encode($this->manager->getMetadata($adapter . '://' . $pathImage)));
             }
 
             $this->manager->delete($adapter . '://' . $pathImage);
@@ -210,7 +212,6 @@ class Storage
         $put = $this->driver->put($adapter, $pathImage, $mime, $stream);
         fclose($stream);
 
-
         if ($put['return'] != false) {
             return ['fileId' => $put['lastInsertId']];
         }
@@ -219,6 +220,16 @@ class Storage
         return ['fileId' => $get['file_id']];
     }
 
+    /**
+     * Get $filename mine
+     */
+    public function getFileMine($file){
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $file['tmp_name']);  //Walidacja Mine
+        finfo_close($finfo);
+
+        return $mime;
+    }
     /**
      * @param $file
      * @param $extensions
@@ -235,9 +246,7 @@ class Storage
         /**
          * Get $filename mine
          */
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $file['tmp_name']);  //Walidacja Mine
-        finfo_close($finfo);
+        $mime = $this->getFileMine($file);
 
         if (!in_array($mime, $allowedTypes) or !in_array($extension, $allowedExtensions)) {
             return false;

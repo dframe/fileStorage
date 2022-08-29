@@ -16,9 +16,9 @@
         "league/flysystem": "^1.1.4",
         "coldume/imagecraft": "^1.0",
         "ext-fileinfo": "*",
-        "league/flysystem-cached-adapter": "^1.1"
+        "league/flysystem-cached-adapter": "^1.1",
+        "ext-json": "*"
     },
-
     "require-dev": {
         "dframe/dframe": "*",
         "phpunit/phpunit": "^5.7.10"
