@@ -14,7 +14,6 @@
     "license": "MIT",
     "require": {
         "league/flysystem": "^1.1.4",
-        "coldume/imagecraft": "^1.0",
         "ext-fileinfo": "*",
         "league/flysystem-cached-adapter": "^1.1",
         "ext-json": "*"
