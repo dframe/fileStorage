@@ -10,7 +10,7 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "homepage": "https://dframeframework.com",
+    "homepage": "https://dframeframework.com/en/docs/fileStorage/master/configuration",
     "license": "MIT",
     "require": {
         "league/flysystem": "^1.1.4",

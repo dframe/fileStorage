@@ -11,7 +11,6 @@ namespace Dframe\FileStorage\Stylist;
 
 use Dframe\FileStorage\Stylist;
 use Exception;
-use Imagecraft\ImageBuilder;
 
 /**
  * Prosty stylista
@@ -22,36 +21,17 @@ use Imagecraft\ImageBuilder;
 class SimpleStylist extends Stylist
 {
     /**
-     * @param resource $originStream
-     * @param string   $extension
-     * @param bool     $stylistObj
-     * @param bool     $stylistParam
+     * @param resource $readStream
+     * @param string $extension
+     * @param bool $stylistObj
+     * @param bool $stylistParam
      *
      * @return bool|resource
      * @throws Exception
      */
-    public function stylize($originStream, $extension, $stylistObj = false, $stylistParam = false)
+    public function stylize($readStream, $extension, $stylistObj = false, $stylistParam = false)
     {
-        $options = ['engine' => 'php_gd', 'locale' => 'pl_PL'];
-        $builder = new ImageBuilder($options);
-
-        $layer = $builder->addBackgroundLayer();
-        $contents = stream_get_contents($originStream);
-        $layer->contents($contents);
-
-        fclose($originStream);
-
-        $image = $builder->save();
-
-        $tmpFile = tmpfile();
-        if ($image->isValid()) {
-            fwrite($tmpFile, $image->getContents());
-        } else {
-            throw new Exception($image->getMessage()); //echo $image->getMessage().PHP_EOL;
-        }
-
-        rewind($tmpFile);
-        return $tmpFile;
+        return $readStream;
     }
 
     /**

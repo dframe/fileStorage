@@ -240,7 +240,7 @@ class Image
      *
      * @return Stylist
      */
-    protected function getStylist($stylist = 'Original')
+    protected function getStylist($stylist = 'original')
     {
         $className = $this->stylists[$stylist];
         if (!class_exists($className) or !method_exists($className, 'stylize')) {
