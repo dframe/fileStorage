@@ -131,9 +131,8 @@ class Storage
      */
     public function drop($adapter, $file)
     {
-
         $get = $this->driver->get($adapter, $file, true);
-        if(empty($get['file_path'])){
+        if (empty($get['file_path'])) {
             throw new FileNotFoundException(FileNotFoundException::FILE_NOT_FOUND_MESSAGE);
         }
 
@@ -198,18 +197,6 @@ class Storage
     }
 
     /**
-     * Get $filename mine
-     */
-    public function getFileMine($file)
-    {
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $file['tmp_name']);  //Walidacja Mine
-        finfo_close($finfo);
-
-        return $mime;
-    }
-
-    /**
      * @param $file
      * @param $extensions
      *
@@ -232,5 +219,17 @@ class Storage
         }
 
         return true;
+    }
+
+    /**
+     * Get $filename mine
+     */
+    public function getFileMine($file)
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $file['tmp_name']);  //Walidacja Mine
+        finfo_close($finfo);
+
+        return $mime;
     }
 }
