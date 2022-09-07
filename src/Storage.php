@@ -85,35 +85,12 @@ class Storage
     public function getFile($file, $storage = 'local')
     {
         $sourceAdapter = $storage . '://' . $file;
-        if ($this->manager->has($sourceAdapter)) {
-            return $file;
-        } else {
+        if ($this->manager->has($sourceAdapter) !== true) {
             throw new FileNotFoundException();
         }
-    }
 
-//    /**
-//     * @param        $file
-//     * @param string $adapter
-//     *
-//     * @return Response
-//     */
-//    public function renderFile($file, $adapter = 'local')
-//    {
-//        $fileAdapter = $adapter . '://' . $file;
-//        // Retrieve a read-stream
-//        if (!$this->manager->has($fileAdapter)) {
-//            throw new FileNotFoundException();
-//        }
-//
-//        $getMimetype = $this->manager->getMimetype($fileAdapter);
-//        $stream = $this->manager->readStream($fileAdapter);
-//        $contents = stream_get_contents($stream);
-//        fclose($stream);
-//
-//        return Response::render($contents)
-//            ->headers(['Content-type' => $getMimetype]);
-//    }
+        return $file;
+    }
 
     /**
      * @return Drivers\DatabaseDriverInterface|null
@@ -150,12 +127,14 @@ class Storage
      * @param $file
      *
      * @return true
+     * @throw Exception
      */
     public function drop($adapter, $file)
     {
+
         $get = $this->driver->get($adapter, $file, true);
-        if ($get['return'] !== true) {
-            throw new FileNotFoundException();
+        if(empty($get['file_path'])){
+            throw new FileNotFoundException(FileNotFoundException::FILE_NOT_FOUND_MESSAGE);
         }
 
         /**
@@ -173,12 +152,10 @@ class Storage
             $this->manager->delete($adapter . '://' . $get['file_path']);
         }
 
-        $drop = $this->driver->drop($adapter, $file);
-        if ($drop['return'] !== true) {
-            throw new Exception($drop['response']);
-        }
-
-        return true;
+        /**
+         * bool|@throw Exception
+         */
+        return $this->driver->drop($adapter, $file);
     }
 
     /**

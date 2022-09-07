@@ -10,23 +10,23 @@
 namespace Dframe\FileStorage;
 
 /**
- * Klasa abstrakcyjna stylisty
+ * Abstract stylist class.
  *
- * Stylista to obiekt, ktory przetwarza obraz wedlug okreslonego schematu
- * (np. przycina, wyszarza, zmniejsza itp.)
+ * A stylist is an object that processes an image according to a certain scheme.
+ * (e.g., trims, grays out, shrinks, etc.).
  *
- * Kazdy stylista powinien miec metode stylize($image), ktora pobiera oryginal
- * w formie ciagu bajtow i zwraca go po przetworzeniu, tez w formie ciagu bajtow
+ * Each stylist should have a stylize($image) method that takes the original.
+ * in the form of a byte string and returns it after processing, also in the form of a byte string.
  *
- * Podklasy stylistow powinny znajdowac sie w folderze stylists
+ * Subclasses of stylists should be located in the stylists folder.
  *
  * @author Sławomir Kaleta <slaszka@gmail.com>
  */
 abstract class Stylist
 {
     /**
-     * Pobiera oryginal i zwraca w przetworzonej formie. Dane wejsciowe to reource obrazu dla biblioteki
-     * PHP GD, a wyjscie to resource z przetworzonym obrazem
+     * Takes the original and returns in processed form. The input is the image resource for the library.
+     * PHP GD library, and the output is a resource with the processed image.
      *
      * @param $readStream resource
      * @param $extension    string
@@ -36,7 +36,7 @@ abstract class Stylist
     abstract public function stylize($readStream, $extension, $stylistObj, $stylistParam);
 
     /**
-     * Zwraca unikalna nazwe stylisty, takze w zaleznosci od parametrow
+     * Returns the unique name of the stylist, also depending on the parameters
      *
      * @param array
      *
