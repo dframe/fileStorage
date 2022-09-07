@@ -5,8 +5,12 @@
     "keywords": [
         "filestorage",
         "filesystem",
+        "images",
+        "storage",
         "dframe",
-        "stylist"
+        "stylist",
+        "S3",
+        "Storage Service"
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
