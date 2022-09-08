@@ -141,8 +141,8 @@ class Storage
          */
         if (!empty($get['cache'])) {
             foreach ($get['cache'] as $key => $value) {
-                if ($this->manager->has($adapter . '://' . $value['file_cache_path'])) {
-                    $this->manager->delete($adapter . '://' . $value['file_cache_path']);
+                if ($this->manager->has($value['file_cache_adapter'] . '://' . $value['file_cache_path'])) {
+                    $this->manager->delete($value['file_cache_adapter'] . '://' . $value['file_cache_path']);
                 }
             }
         }

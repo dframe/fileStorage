@@ -72,6 +72,7 @@ return [
         'web' => $web
     ],
     'cache' => [
+        'adapter' => 'cache',
         'life' => 600 // in seconds
     ],
     'publicUrls' => [

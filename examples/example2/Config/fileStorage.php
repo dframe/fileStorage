@@ -13,5 +13,12 @@ return [
         'local' => $local,
         'cache' => $cache,
         'web' => $web
+    ],
+    'cache' => [
+        'adapter' => 'cache',
+        'life' => 600 // in seconds
+    ],
+    'publicUrls' => [
+        'local' => ''
     ]
 ];

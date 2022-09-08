@@ -77,7 +77,7 @@ class Image
     {
         $this->config = $config;
         $adapters = $config['adapters'];
-        $cache = $config['cache'] ?? ['life' => 600];
+        $cache = $config['cache'] ?? ['life' => 600, 'adapter' => 'cache'];
 
         $this->cache = $cache;
         $this->manager = new MountManager($adapters);
@@ -163,6 +163,7 @@ class Image
         return str_replace($basename, rtrim($originalImage, '.' . $ext), $cache);
     }
 
+
     /**
      * @param      $adapter
      * @param      $originalImage
@@ -178,7 +179,7 @@ class Image
 
         $cache = $this->createCachePath($originalImage, $output);
 
-        $cacheAdapter = 'cache://' . $cache;
+        $cacheAdapter = $cache['adapter'] ?? 'cache' . '://' . $cache;
         $sourceAdapter = $adapter . '://' . $originalImage;
 
         $has = $this->manager->has($cacheAdapter);
