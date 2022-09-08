@@ -2,6 +2,7 @@
 
 namespace Model\FileStorage\Drivers;
 
+use Dframe\Config\Config;
 use Dframe\FileStorage\Drivers\DatabaseDriverInterface;
 use Exception;
 use Model\Model;
@@ -83,8 +84,10 @@ class DatabaseDriverModel extends Model implements DatabaseDriverInterface
 
         $cache = $this->db->select('file_cache', '*', ['file_cache_path' => $cachePath])->result();
         if (empty($cache['id']) and !empty($row['file_id'])) {
+            $cacheConfig = Config::load('fileStorage')->get('cache');
             $data = [
                 'file_id' => $row['file_id'],
+                'file_cache_adapter' => $cacheConfig['adapter'],
                 'file_cache_path' => $cachePath,
                 'file_cache_mime' => $mime
             ];
