@@ -44,6 +44,7 @@ CREATE TABLE `files` (
 CREATE TABLE `file_cache` (
   `id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
+  `file_cache_adapter` varchar(255) NOT NULL,
   `file_cache_path` varchar(255) NOT NULL,
   `file_cache_mime` varchar(127) NOT NULL,
   `file_cache_metadata` varchar(5000) NOT NULL,
